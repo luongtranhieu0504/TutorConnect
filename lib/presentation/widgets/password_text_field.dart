@@ -41,10 +41,12 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
                 borderSide: BorderSide(color: AppColors.colorButton, width: 2),
                 borderRadius: BorderRadius.circular(10)
             )
-
           ),
           keyboardType: TextInputType.visiblePassword,
           textInputAction: TextInputAction.done,
+          obscureText: !_visiblePassword,
         ));
   }
 }
+
+

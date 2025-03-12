@@ -1,21 +1,69 @@
-class UserModel {
-  final String id;
-  final String name;
-  final String phone;
-  final String role; // student | tutor
+import 'package:injectable/injectable.dart';
+import '../../../common/async_state.dart';
+import '../../../common/stream_wrapper.dart';
+import '../../../domain/repository/login_repository.dart';
 
-  UserModel({required this.id, required this.name, required this.phone, required this.role});
+@injectable
+class LoginBloc {
+  late final LoginRepository _loginRepository;
+  final signInBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'],
-      name: map['name'],
-      phone: map['phone'],
-      role: map['role'],
+  LoginBloc(this._loginRepository);
+
+  void signIn(String email, String password) async {
+    signInBroadcast.add(const AsyncState.loading());
+    final result = await _loginRepository.signInWithEmail(email, password);
+    result.when(
+      success: (user) {
+        signInBroadcast.add(AsyncState.success(true));
+      },
+      failure: (message) {
+        signInBroadcast.add(AsyncState.failure(message));
+      },
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'name': name, 'phone': phone, 'role': role};
+  void resetPassword(String email) async {
+    signInBroadcast.add(const AsyncState.loading());
+    final result = await _loginRepository.resetPassword(email);
+    result.when(
+      success: (user) {
+        signInBroadcast.add(AsyncState.success(true));
+      },
+      failure: (message) {
+        signInBroadcast.add(AsyncState.failure(message));
+      },
+    );
+  }
+
+  void signUp(String email, String password) async {
+    signInBroadcast.add(const AsyncState.loading());
+    final result = await _loginRepository.signUpWithEmail(
+        email: email, password: password);
+    result.when(
+      success: (user) {
+        signInBroadcast.add(AsyncState.success(true));
+      },
+      failure: (message) {
+        signInBroadcast.add(AsyncState.failure(message));
+      },
+    );
+  }
+
+  void updateUser(String uid, Map<String, dynamic> data) async {
+    signInBroadcast.add(const AsyncState.loading());
+    final result = await _loginRepository.updateUser(uid, data);
+    result.when(
+      success: (user) {
+        signInBroadcast.add(AsyncState.success(true));
+      },
+      failure: (message) {
+        signInBroadcast.add(AsyncState.failure(message));
+      },
+    );
+  }
+
+  void dispose() {
+    signInBroadcast.close();
   }
 }
