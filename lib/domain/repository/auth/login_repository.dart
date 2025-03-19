@@ -1,11 +1,12 @@
 
-import '../../common/task_result.dart';
+import '../../../common/task_result.dart';
 
 abstract interface class LoginRepository {
   Future<TaskResult<bool>> signInWithEmail(String email, String password);
   Future<TaskResult<String>> signUpWithEmail({
     required String email,
     required String password,
+    required String? role,
   });
   Future<TaskResult<bool>> updateUser(String uid, Map<String, dynamic> data);
 

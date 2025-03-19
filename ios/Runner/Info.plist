@@ -29,6 +29,12 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
+	<key>NSCameraUsageDescription</key>
+    <string>Ứng dụng cần quyền truy cập camera để chụp ảnh.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Ứng dụng cần quyền truy cập thư viện ảnh.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Ứng dụng cần quyền lưu ảnh vào thư viện.</string>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

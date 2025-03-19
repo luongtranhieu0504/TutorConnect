@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:tutorconnect/presentation/widgets/custom_bottom_nav.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  final Widget child;
+  const HomeScreen({super.key, required this.child});
 
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: SafeArea(
+          child: SafeArea(child: child)
+      ),
+      bottomNavigationBar: CustomBottomNav(),
+    );
   }
 }

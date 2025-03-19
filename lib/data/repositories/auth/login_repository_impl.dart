@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../common/task_result.dart';
-import '../../domain/repository/login_repository.dart';
+import '../../../common/task_result.dart';
+import '../../../domain/repository/auth/login_repository.dart';
 
 @Injectable(as: LoginRepository)
 class LoginRepositoryImpl implements LoginRepository {
@@ -26,7 +26,7 @@ class LoginRepositoryImpl implements LoginRepository {
       // }
       // UserModel loggedInUser = UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>);
       if (credential.user != null) {
-        return TaskResult.success(true); // ✅ Chỉ xác thực đăng nhập, không cần lấy user
+        return TaskResult.success(true);
       } else {
         return TaskResult.failure("Authentication failed");
       }
@@ -63,17 +63,24 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<TaskResult<String>> signUpWithEmail({
     required String email,
     required String password,
+    required String? role,
   }) async {
     try {
       final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       final user = userCredential.user;
       if (user == null) {
         return TaskResult.failure("User creation failed.");
       }
+      // Gọi updateUser để lưu thông tin user vào Firestore
+      await updateUser(user.uid, {
+        "email": email,
+        "role": role,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+
       return TaskResult.success(user.uid);
 
     } on FirebaseAuthException catch (e) {
@@ -86,8 +93,8 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   Future<TaskResult<bool>> updateUser(String uid, Map<String, dynamic> data) async {
-    if (data['role'] == null || (data['role'] as String).isEmpty) {
-      return TaskResult.failure("Vai trò (Role) là bắt buộc.");
+    if (uid.isEmpty) {
+      return TaskResult.failure("User ID is empty!");
     }
     try {
       await _firestore.collection("users").doc(uid).set(data, SetOptions(merge: true));
