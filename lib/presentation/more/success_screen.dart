@@ -5,10 +5,10 @@ class SuccessScreen extends StatelessWidget {
   final VoidCallback onPressed;
 
   const SuccessScreen({
-    Key? key,
+    super.key,
     required this.buttonText,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

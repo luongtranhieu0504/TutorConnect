@@ -6,6 +6,7 @@ import 'package:tutorconnect/theme/app_theme.dart';
 import 'di/di.dart';
 import 'firebase_options.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();

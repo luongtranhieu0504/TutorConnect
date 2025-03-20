@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorconnect/di/di.dart';
+import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/widgets/button_custom.dart';
 import 'package:tutorconnect/presentation/widgets/email_text_field.dart';
 import 'package:tutorconnect/presentation/widgets/or_divider.dart';
@@ -36,8 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },
         success: (data) {
-          context.pop(); // Đóng loading dialog
-          context.go('/home');
+          context.go(Routes.homePage);
         },
         failure: (message) {
           Navigator.pop(context);

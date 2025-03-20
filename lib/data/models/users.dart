@@ -8,6 +8,7 @@ class UserModel {
   final String? phone;
   final String? photoUrl;
   final String? bio;
+  final String? address;
 
   UserModel({
     required this.uid,
@@ -19,6 +20,7 @@ class UserModel {
     this.phone,
     this.photoUrl,
     this.bio,
+    this.address,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +34,7 @@ class UserModel {
       "phone": phone ?? "",
       "photoUrl": photoUrl ?? "",
       "bio": bio ?? "",
+      "address": address ?? "",
     };
   }
 
@@ -46,6 +49,7 @@ class UserModel {
       phone: json["phone"],
       photoUrl: json["photoUrl"],
       bio: json["bio"],
+      address: json["address"],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorconnect/data/models/message.dart';
+import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/widgets/search_text_field.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
 import 'package:tutorconnect/theme/text_styles.dart';
@@ -90,7 +91,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget _messageCard(MessageModel message, bool isLastItem, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/chat',
+        context.push(Routes.chatPage,
             extra: {
               "name": message.name,
               "subject": message.subject,
