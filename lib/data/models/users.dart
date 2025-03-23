@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'package:tutorconnect/data/models/student.dart';
+import 'package:tutorconnect/data/models/tutor.dart';
+
 class UserModel {
   final String uid;
   final String email;
@@ -9,6 +13,8 @@ class UserModel {
   final String? photoUrl;
   final String? bio;
   final String? address;
+  final StudentProfile? studentProfile;
+  final TutorProfile? tutorProfile;
 
   UserModel({
     required this.uid,
@@ -21,6 +27,8 @@ class UserModel {
     this.photoUrl,
     this.bio,
     this.address,
+    this.studentProfile,
+    this.tutorProfile,
   });
 
   Map<String, dynamic> toJson() {
@@ -35,6 +43,8 @@ class UserModel {
       "photoUrl": photoUrl ?? "",
       "bio": bio ?? "",
       "address": address ?? "",
+      'student_profile': studentProfile?.toJson(),
+      'tutor_profile': tutorProfile?.toJson(),
     };
   }
 
@@ -50,6 +60,12 @@ class UserModel {
       photoUrl: json["photoUrl"],
       bio: json["bio"],
       address: json["address"],
+      studentProfile: json['student_profile'] != null
+          ? StudentProfile.fromJson(json['student_profile'])
+          : null,
+      tutorProfile: json['tutor_profile'] != null
+          ? TutorProfile.fromJson(json['tutor_profile'])
+          : null,
     );
   }
 }

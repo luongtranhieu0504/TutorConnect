@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'color_platte.dart';
 
 class AppTextStyles {
-  static final headingMedium = GoogleFonts.interTight(
+  final BuildContext context;
+  AppTextStyles(this.context);
+
+  TextStyle get headingMedium => GoogleFonts.interTight(
     fontSize: 32,
     fontWeight: FontWeight.normal,
-    color: AppColors.textPrimary,
+    color: Theme.of(context).textTheme.headlineMedium?.color,
   );
 
-  static final headingSemiBold = GoogleFonts.interTight(
+  TextStyle get headingSemiBold => GoogleFonts.interTight(
     fontSize: 32,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: Theme.of(context).textTheme.headlineSmall?.color,
   );
 
-  static final headingBold = GoogleFonts.interTight(
+  TextStyle get headingBold => GoogleFonts.interTight(
     fontSize: 32,
     fontWeight: FontWeight.bold,
-    color: AppColors.textPrimary,
+    color: Theme.of(context).textTheme.headlineSmall?.color,
   );
 
-  static final bodyText1 = GoogleFonts.interTight(
+  TextStyle get bodyText1 => GoogleFonts.interTight(
     fontSize: 16,
     fontWeight: FontWeight.bold,
-    color: AppColors.textPrimary,
+    color: Theme.of(context).textTheme.bodyLarge?.color,
   );
 
-  static final bodyText2 = GoogleFonts.interTight(
+  TextStyle get bodyText2 => GoogleFonts.interTight(
     fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
+    fontWeight: FontWeight.w600,
+    color: Theme.of(context).textTheme.bodySmall?.color,
   );
 }

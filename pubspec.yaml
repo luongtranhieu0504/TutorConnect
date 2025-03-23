@@ -46,23 +46,33 @@ dependencies:
   cloud_firestore: ^5.6.5
   firebase_storage: ^12.4.4
   firebase_messaging: ^15.2.4
+  shared_preferences: ^2.5.2
 
   # di
   injectable: ^2.4.4
   get_it: ^8.0.1
 
-#  # UI & Utilities
-#  intl: ^0.20.2
+  #  # UI & Utilities
+  #  intl: ^0.20.2
   google_fonts: ^6.2.1
-  flutter_svg: ^2.0.17
   intl_phone_field: ^3.2.0
   go_router: ^14.8.1
-#  cached_network_image: ^3.3.0
+  #  cached_network_image: ^3.3.0
   image_picker: ^1.1.2
   emoji_picker_flutter: ^4.3.0
-#  flutter_local_notifications: ^18.0.1
-#  flutter toast: ^8.2.2
-#
+  #  flutter_local_notifications: ^18.0.1
+  #  flutter toast: ^8.2.2
+
+
+  # Utils
+  lottie: ^3.1.2
+  decimal: ^3.0.2
+  flutter_svg: ^2.0.17
+  diacritic: ^0.1.6
+  intl: ^0.19.0
+  logger: ^2.5.0
+  image_picker_web: ^4.0.0
+
 #  # Chat & Real-Time
 #  cloud_functions: ^5.3.4
 #

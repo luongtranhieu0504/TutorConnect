@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorconnect/presentation/navigation/layout_scaffold.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
+import 'package:tutorconnect/presentation/screens/history_session/history_session_screen.dart';
 import 'package:tutorconnect/presentation/screens/scheduall/scheduall_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import '../screens/home/home_screen.dart';
@@ -85,5 +86,9 @@ final router = GoRouter(
         );
       },
     ),
+    GoRoute(
+      path: Routes.historySessionPage,
+      builder: (context, state) => const HistorySessionScreen(),
+    )
   ],
 );

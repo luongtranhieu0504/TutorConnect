@@ -8,6 +8,7 @@ class LoginBloc {
   late final LoginRepository _loginRepository;
   final signInBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
   final registerBroadcast = StreamWrapper<AsyncState<String>>(broadcast: true);
+  final logoutBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
 
   LoginBloc(this._loginRepository);
 
@@ -64,8 +65,22 @@ class LoginBloc {
     );
   }
 
+  void logout() async {
+    logoutBroadcast.add(const AsyncState.loading());
+    final result = await _loginRepository.logout();
+    result.when(
+        success: (user) {
+          logoutBroadcast.add(AsyncState.success(true));
+        },
+        failure: (message) {
+          logoutBroadcast.add(AsyncState.failure(message));
+        }
+    );
+  }
+
   void dispose() {
     signInBroadcast.close();
     registerBroadcast.close();
+    logoutBroadcast.close();
   }
 }

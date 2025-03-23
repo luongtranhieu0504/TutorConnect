@@ -89,6 +89,7 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Widget _messageCard(MessageModel message, bool isLastItem, BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
         context.push(Routes.chatPage,
@@ -151,8 +152,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       children: [
                         Text(
                           message.name,
-                          style: AppTextStyles.bodyText1.copyWith(
-                            color: Colors.black,
+                          style: AppTextStyles(context).bodyText2.copyWith(
                             fontSize: 18,
                           )
                         ),
@@ -160,12 +160,11 @@ class _MessageScreenState extends State<MessageScreen> {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Color(0xFFE2E8F0),
+                            color: isDarkMode ? Colors.black : Color(0xFFE2E8F0),
                           ),
                           child: Text(
                             message.subject,
-                            style: AppTextStyles.bodyText1.copyWith(
-                              color: AppColors.color600,
+                            style: AppTextStyles(context).bodyText2.copyWith(
                               fontWeight: FontWeight.normal,
                               fontSize: 14,
                             )
@@ -177,11 +176,9 @@ class _MessageScreenState extends State<MessageScreen> {
                       message.message,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: message.isUnread ? AppTextStyles.bodyText1.copyWith(
-                        color: AppColors.color500,
+                      style: message.isUnread ? AppTextStyles(context).bodyText2.copyWith(
                         fontSize: 15,
-                      ) : AppTextStyles.bodyText1.copyWith(
-                        color: AppColors.color800,
+                      ) : AppTextStyles(context).bodyText2.copyWith(
                         fontSize: 15,
                       )
                     )
@@ -190,8 +187,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 Spacer(),
                 Text(
                   message.time,
-                  style: AppTextStyles.bodyText1.copyWith(
-                    color: AppColors.color600,
+                  style: AppTextStyles(context).bodyText2.copyWith(
                     fontSize: 14
                   )
                 )

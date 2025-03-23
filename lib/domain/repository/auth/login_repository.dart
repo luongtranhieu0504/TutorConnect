@@ -11,4 +11,6 @@ abstract interface class LoginRepository {
   Future<TaskResult<bool>> updateUser(String uid, Map<String, dynamic> data);
 
   Future<TaskResult<bool>> resetPassword(String email);
+
+  Future<TaskResult<bool>> logout();
 }

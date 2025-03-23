@@ -121,7 +121,6 @@ class _ChatScreenState extends State<ChatScreen> {
             automaticallyImplyLeading: false,
             flexibleSpace: _appBar(),
           ),
-          backgroundColor: const Color.fromARGB(255, 234, 248, 255),
           body: SafeArea(
               child: Column(children: [
             Expanded(
@@ -142,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             decoration: BoxDecoration(
                                 color: message["isMine"]
                                     ? Color(0xFF8932EB)
-                                    : Colors.white,
+                                    : Color(0xFF3E4042),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(12),
                                   topRight: Radius.circular(12),
@@ -164,10 +163,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                 maxWidth:
                                     MediaQuery.of(context).size.width * 0.7),
                             child: Text(message["text"],
-                                style: AppTextStyles.bodyText2.copyWith(
+                                style: AppTextStyles(context).bodyText2.copyWith(
                                   color: message["isMine"]
                                       ? Colors.white
-                                      : AppColors.color600,
+                                      : Colors.white,
                                   fontSize: 16,
                                 ))),
                         Padding(
@@ -197,6 +196,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _appBar() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SafeArea(
       child: InkWell(
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -227,8 +227,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           SizedBox(width: 10),
           Text(widget.name,
-              style: AppTextStyles.bodyText1.copyWith(
-                color: Colors.black,
+              style: AppTextStyles(context).bodyText1.copyWith(
                 fontSize: 20,
               )),
           SizedBox(width: 8),
@@ -238,7 +237,7 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Color(0xFFE2E8F0),
             ),
             child: Text(widget.subject,
-                style: AppTextStyles.bodyText1.copyWith(
+                style: AppTextStyles(context).bodyText1.copyWith(
                   color: AppColors.color600,
                   fontWeight: FontWeight.normal,
                   fontSize: 14,
@@ -246,25 +245,53 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           Spacer(),
           IconButton(
-              onPressed: () => {},
-              icon: SvgPicture.asset('assets/icons/phone.svg')),
+            onPressed: () => {},
+            icon: SvgPicture.asset(
+              'assets/icons/phone.svg',
+              color: isDarkMode ? Colors.blueAccent : Colors.white,
+            ),
+          ),
           IconButton(
-              onPressed: () => {},
-              icon: SvgPicture.asset('assets/icons/video.svg')),
+            onPressed: () => {},
+            icon: SvgPicture.asset(
+              'assets/icons/video.svg',
+              color: isDarkMode ? Colors.blueAccent : Colors.white,
+            ),
+          ),
         ]),
       ),
     );
   }
 
   Widget _buildMessageInput() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
       child: Row(
         children: [
           Expanded(
-              child: Card(
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? Theme.of(context).colorScheme.surface.withOpacity(0.85)
+                          : Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isDarkMode
+                            ? Colors.white.withOpacity(0.08) // tạo border nhẹ cho dark mode
+                            : Colors.transparent,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDarkMode
+                              ? Colors.black.withOpacity(0.3) // bóng nhẹ dark mode
+                              : Colors.grey.withOpacity(0.3),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        )
+                      ]
+                  ),
                   child: Row(children: [
                     SizedBox(width: 10),
                     Expanded(
@@ -274,7 +301,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       maxLines: null,
                       decoration: InputDecoration(
                         hintText: "Nhập tin nhắn...",
-                        hintStyle: AppTextStyles.bodyText2.copyWith(
+                        hintStyle: AppTextStyles(context).bodyText2.copyWith(
                           color: AppColors.color600,
                           fontSize: 16,
                         ),
@@ -288,11 +315,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     IconButton(
                         onPressed: () {},
                         icon: Icon(Icons.attach_file_outlined,
-                            color: AppColors.color600)),
+                            color: isDarkMode ? Colors.blueAccent : AppColors.color600
+                        )),
                     IconButton(
                         onPressed: () => {},
                         icon: Icon(Icons.keyboard_voice_outlined,
-                            color: AppColors.color600)),
+                            color: isDarkMode ? Colors.blueAccent : AppColors.color600
+                        )
+                    ),
                   ]
                   )
               )
@@ -310,7 +340,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding:
             const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
             shape: const CircleBorder(),
-            color: Colors.green,
+            color: Colors.blueAccent,
             child: const Icon(Icons.send, color: Colors.white, size: 28),
           )
         ],

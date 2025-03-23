@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Đăng Ký', style: AppTextStyles.headingMedium),
+          title: Text('Đăng Ký', style: AppTextStyles(context).headingMedium),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -62,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Text(
                   "Email:",
-                  style: AppTextStyles.bodyText1,
+                  style: AppTextStyles(context).bodyText1,
                 ),
                 const SizedBox(height: 8),
                 EmailTextField(
@@ -72,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 24),
                 Text(
                   "Mật khẩu:",
-                  style: AppTextStyles.bodyText1,
+                  style: AppTextStyles(context).bodyText1,
                 ),
                 const SizedBox(height: 8),
                 PasswordTextField(
@@ -82,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 12),
                 Text(
                   "Vai trò:",
-                  style: AppTextStyles.bodyText1,
+                  style: AppTextStyles(context).bodyText1,
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
@@ -119,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: RichText(
                     text: TextSpan(
                         text: "Bạn có tài khoản? ",
-                        style: AppTextStyles.bodyText1
+                        style: AppTextStyles(context).bodyText1
                             .copyWith(color: Color(0xFF64748B)),
                         children: [
                           WidgetSpan(
@@ -129,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   },
                                   child: Text(
                                     "Đăng nhập",
-                                    style: AppTextStyles.bodyText1
+                                    style: AppTextStyles(context).bodyText1
                                         .copyWith(color: AppColors.colorButton),
                                   ))),
                         ]),
@@ -212,7 +212,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin cá nhân', style: AppTextStyles.headingMedium),
+        title: Text('Thông tin cá nhân', style: AppTextStyles(context).headingMedium),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -226,7 +226,7 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                     SizedBox(height: 12.0),
                     Text(
                       "Nhấn vào hình tròn để\nCập nhật hình của bạn",
-                      style: AppTextStyles.bodyText1.copyWith(color: AppColors.color900),
+                      style: AppTextStyles(context).bodyText1.copyWith(color: AppColors.color900),
                     ),
                   ],
                 ),

@@ -8,4 +8,6 @@ class Routes {
   static const String profilePage = '/profile';
   static const String explorePage = '/explore';
   static const String chatPage = '/chat';
+  static const String resetPasswordPage = '/reset-password';
+  static const String historySessionPage = '/history-session';
 }

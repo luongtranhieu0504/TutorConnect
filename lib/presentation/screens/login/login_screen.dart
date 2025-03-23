@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Đăng Nhập', style: AppTextStyles.headingMedium),
+          title: Text('Đăng Nhập', style: AppTextStyles(context).headingMedium),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   "Email:",
-                  style: AppTextStyles.bodyText1,
+                  style: AppTextStyles(context).bodyText1,
                 ),
                 const SizedBox(height: 8),
                 EmailTextField(
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 24),
                 Text(
                   "Mật khẩu:",
-                  style: AppTextStyles.bodyText1,
+                  style: AppTextStyles(context).bodyText1,
                 ),
                 const SizedBox(height: 8),
                 PasswordTextField(
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     context.go('/reset-password');
                   },
                   child: Text("Quên mật khẩu?",
-                      style: AppTextStyles.bodyText1.copyWith(
+                      style: AppTextStyles(context).bodyText1.copyWith(
                           color: AppColors.colorButton)),
                 ),
                 const SizedBox(height: 12),
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: RichText(
                     text: TextSpan(
                         text: "Bạn chưa có tài khoản? ",
-                        style: AppTextStyles.bodyText1
+                        style: AppTextStyles(context).bodyText1
                             .copyWith(color: Color(0xFF64748B)),
                         children: [
                           WidgetSpan(
@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: Text(
                                     "Đăng kí",
-                                    style: AppTextStyles.bodyText1
+                                    style: AppTextStyles(context).bodyText1
                                         .copyWith(color: AppColors.colorButton),
                                   ))),
                         ]),
@@ -153,7 +153,7 @@ class ResetPasswordScreen extends StatelessWidget {
     final bloc = getIt<LoginBloc>();
     return Scaffold(
         appBar: AppBar(
-          title: Text('Đặt lại mật khẩu', style: AppTextStyles.headingMedium),
+          title: Text('Đặt lại mật khẩu', style: AppTextStyles(context).headingMedium),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -163,7 +163,7 @@ class ResetPasswordScreen extends StatelessWidget {
                 children: [
                   Text(
                     "Email:",
-                    style: AppTextStyles.bodyText1,
+                    style: AppTextStyles(context).bodyText1,
                   ),
                   SizedBox(height: 8),
                   EmailTextField(

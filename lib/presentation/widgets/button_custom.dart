@@ -31,7 +31,7 @@ class ProjectButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: AppTextStyles.bodyText1.copyWith(color: textColor),
+          style: AppTextStyles(context).bodyText1.copyWith(color: textColor),
         )
       ),
     );
@@ -51,7 +51,7 @@ class SocialButton extends StatelessWidget {
       height: 48,
       child: OutlinedButton.icon(
         icon: SvgPicture.asset(iconPath, width: 24, height: 24),
-        label: Text("Continue with $title", style: AppTextStyles.bodyText1,),
+        label: Text("Continue with $title", style: AppTextStyles(context).bodyText1,),
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: Colors.grey, width: 2),

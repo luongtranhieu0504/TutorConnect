@@ -12,6 +12,8 @@ class LoginRepositoryImpl implements LoginRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+
+
   @override
   Future<TaskResult<bool>> signInWithEmail(String email,String password) async {
     try {
@@ -32,6 +34,16 @@ class LoginRepositoryImpl implements LoginRepository {
       }
     } catch (e) {
       return TaskResult.failure("Unexpected error: $e");
+    }
+  }
+
+  @override
+  Future<TaskResult<bool>> logout() async{
+    try {
+      _auth.signOut();
+      return TaskResult.success(true);
+    } catch (e) {
+      return TaskResult.failure(e.toString());
     }
   }
 

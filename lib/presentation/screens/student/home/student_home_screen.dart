@@ -18,6 +18,7 @@ enum AppointmentStatus { pending, confirmed, completed }
 class _HomeScreenState extends State<StudentHomeScreen> {
   final _searchController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
     return _uiContent();
@@ -52,10 +53,9 @@ class _HomeScreenState extends State<StudentHomeScreen> {
                   SizedBox(height: 12),
                   Text(
                     "Môn Học",
-                    style: AppTextStyles.headingMedium.copyWith(
+                    style: AppTextStyles(context).headingMedium.copyWith(
                         fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                    ),
                   ),
                   SizedBox(height: 12),
                   SizedBox(
@@ -80,10 +80,9 @@ class _HomeScreenState extends State<StudentHomeScreen> {
                   SizedBox(height: 20),
                   Text(
                     "Gia sư",
-                    style: AppTextStyles.headingMedium.copyWith(
+                    style: AppTextStyles(context).headingMedium.copyWith(
                         fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                    ),
                   ),
                   SizedBox(height: 12),
                   SizedBox(
@@ -121,10 +120,9 @@ class _HomeScreenState extends State<StudentHomeScreen> {
                   SizedBox(height: 20),
                   Text(
                     "Lịch học sắp tới",
-                    style: AppTextStyles.headingMedium.copyWith(
+                    style: AppTextStyles(context).headingMedium.copyWith(
                         fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                        ),
                   ),
                   SizedBox(height: 12),
                   SizedBox(
@@ -183,12 +181,12 @@ class _HomeScreenState extends State<StudentHomeScreen> {
           RichText(
             text: TextSpan(
                 text: title,
-                style: AppTextStyles.bodyText1.copyWith(color: Colors.white),
+                style: AppTextStyles(context).bodyText1.copyWith(color: Colors.white),
                 children: [
                   TextSpan(
                     text: "- $tutorCount Tutors",
                     style:
-                        AppTextStyles.bodyText1.copyWith(color: Colors.white70),
+                        AppTextStyles(context).bodyText1.copyWith(color: Colors.white70),
                   ),
                 ]),
           )
@@ -199,21 +197,32 @@ class _HomeScreenState extends State<StudentHomeScreen> {
 
   Widget _tutorCard(String name, String level, String subject,
       String avatarPath, String price, String rating, int numReviews) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 300,
       margin: const EdgeInsets.only(right: 12.0),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode
+              ? Theme.of(context).colorScheme.surface.withOpacity(0.85)
+              : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDarkMode
+                ? Colors.white.withOpacity(0.08) // tạo border nhẹ cho dark mode
+                : Colors.transparent,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: isDarkMode
+                  ? Colors.black.withOpacity(0.3) // bóng nhẹ dark mode
+                  : Colors.grey.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 5,
               offset: Offset(0, 3),
             )
-          ]),
+          ]
+      ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           CircleAvatar(
@@ -225,17 +234,17 @@ class _HomeScreenState extends State<StudentHomeScreen> {
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
               name,
-              style: AppTextStyles.bodyText1.copyWith(color: Colors.black),
+              style: AppTextStyles(context).bodyText1,
             ),
             SizedBox(height: 4),
             Text(
               level,
-              style: AppTextStyles.bodyText1.copyWith(color: Colors.black54),
+              style: AppTextStyles(context).bodyText2.copyWith(fontSize: 15),
             ),
             SizedBox(height: 4),
             Text(
               subject,
-              style: AppTextStyles.bodyText1.copyWith(color: Colors.black54),
+              style: AppTextStyles(context).bodyText2.copyWith(fontSize: 15),
             ),
           ]),
         ]),
@@ -250,15 +259,15 @@ class _HomeScreenState extends State<StudentHomeScreen> {
               SizedBox(width: 4),
               Text(
                 "$rating ($numReviews học sinh)",
-                style: AppTextStyles.bodyText1
-                    .copyWith(color: Colors.black, fontSize: 14),
+                style: AppTextStyles(context).bodyText1
+                    .copyWith(fontSize: 14),
               ),
             ],
           ),
           Text(
             "$price/buổi",
-            style: AppTextStyles.bodyText1
-                .copyWith(color: Colors.black, fontSize: 14),
+            style: AppTextStyles(context).bodyText1
+                .copyWith(fontSize: 14),
           ),
         ]),
         SizedBox(height: 8),
@@ -278,19 +287,31 @@ class _HomeScreenState extends State<StudentHomeScreen> {
       required String subject,
       required AppointmentStatus status,
       required String avatarPath}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.only(right: 16),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          color: isDarkMode
+              ? Theme.of(context).colorScheme.surface.withOpacity(0.85)
+              : Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDarkMode
+                ? Colors.white.withOpacity(0.08) // tạo border nhẹ cho dark mode
+                : Colors.transparent,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 1,
+              color: isDarkMode
+                  ? Colors.black.withOpacity(0.3) // bóng nhẹ dark mode
+                  : Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
               blurRadius: 5,
+              offset: Offset(0, 3),
             )
-          ]),
+          ]
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -300,16 +321,15 @@ class _HomeScreenState extends State<StudentHomeScreen> {
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(date,
-                    style: AppTextStyles.bodyText1.copyWith(
-                      color: AppColors.color600,
+                    style: AppTextStyles(context).bodyText2.copyWith(
                       fontSize: 14,
                     )),
                 Text(time,
-                    style: AppTextStyles.bodyText1.copyWith(
-                      color: Colors.black,
+                    style: AppTextStyles(context).bodyText1.copyWith(
                       fontSize: 14,
                     ))
               ]),
+              SizedBox(width: 8),
               _statusBadge(status)
             ],
           ),
@@ -324,13 +344,11 @@ class _HomeScreenState extends State<StudentHomeScreen> {
               SizedBox(width: 8),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Text(tutorName,
-                    style: AppTextStyles.bodyText1.copyWith(
-                      color: Colors.black,
+                    style: AppTextStyles(context).bodyText1.copyWith(
                       fontSize: 14,
                     )),
                 Text(subject,
-                    style: AppTextStyles.bodyText1.copyWith(
-                      color: AppColors.color600,
+                    style: AppTextStyles(context).bodyText2.copyWith(
                       fontSize: 14,
                     ))
               ])
@@ -369,7 +387,7 @@ class _HomeScreenState extends State<StudentHomeScreen> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(badgeText,
-          style: AppTextStyles.bodyText1.copyWith(
+          style: AppTextStyles(context).bodyText1.copyWith(
             color: textColor,
             fontSize: 12,
           )),
