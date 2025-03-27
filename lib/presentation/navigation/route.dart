@@ -5,19 +5,19 @@ import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/screens/history_session/history_session_screen.dart';
 import 'package:tutorconnect/presentation/screens/scheduall/scheduall_screen.dart';
 import '../screens/chat/chat_screen.dart';
-import '../screens/home/home_screen.dart';
 import '../screens/login/login_screen.dart';
 import '../screens/login/register_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/message/message_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/student/home/student_home_screen.dart';
+import '../screens/student/tutor_map/tutor_map_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: Routes.homePage,
+  initialLocation: Routes.tutorMapPage,
   routes: [
     // StatefulShellRoute chứa BottomNavigationBar
     StatefulShellRoute.indexedStack(
@@ -89,6 +89,20 @@ final router = GoRouter(
     GoRoute(
       path: Routes.historySessionPage,
       builder: (context, state) => const HistorySessionScreen(),
+    ),
+    // GoRoute(
+    //   path: Routes.resetPasswordPage,
+    //   builder: (context, state) => const LoginScreen(),
+    // ),
+    // GoRoute(
+    //   path: Routes.tutorDetailPage,
+    //   builder: (context, state) => const LoginScreen(),
+    // ),
+    GoRoute(
+      path: Routes.tutorMapPage,
+      builder: (context, state) => const TutorMapScreen(),
     )
+
+
   ],
 );

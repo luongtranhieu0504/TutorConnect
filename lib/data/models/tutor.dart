@@ -3,7 +3,6 @@ class TutorProfile {
   final List<String> degrees;
   final int experienceYears;
   final int pricePerHour;
-  final Location location;
   final double rating;
   final List<TutorReview> reviews;
   final List<Availability> availability;
@@ -15,7 +14,6 @@ class TutorProfile {
     required this.degrees,
     required this.experienceYears,
     required this.pricePerHour,
-    required this.location,
     required this.rating,
     required this.reviews,
     required this.availability,
@@ -29,7 +27,6 @@ class TutorProfile {
       degrees: List<String>.from(json['degrees']),
       experienceYears: json['experience_years'],
       pricePerHour: json['price_per_hour'],
-      location: Location.fromJson(json['location']),
       rating: json['rating'].toDouble(),
       reviews: (json['reviews'] as List)
           .map((e) => TutorReview.fromJson(e))
@@ -50,7 +47,6 @@ class TutorProfile {
       'degrees': degrees,
       'experience_years': experienceYears,
       'price_per_hour': pricePerHour,
-      'location': location.toJson(),
       'rating': rating,
       'reviews': reviews.map((e) => e.toJson()).toList(),
       'availability': availability.map((e) => e.toJson()).toList(),

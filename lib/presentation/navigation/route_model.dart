@@ -10,4 +10,6 @@ class Routes {
   static const String chatPage = '/chat';
   static const String resetPasswordPage = '/reset-password';
   static const String historySessionPage = '/history-session';
+  static const String tutorDetailPage = '/tutor-detail';
+  static const String tutorMapPage = '/tutor-map';
 }
