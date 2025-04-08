@@ -12,4 +12,8 @@ class Routes {
   static const String historySessionPage = '/history-session';
   static const String tutorDetailPage = '/tutor-detail';
   static const String tutorMapPage = '/tutor-map';
+  static const String postPage = '/post';
+  static const String postDetailPage = '/post-detail';
+  static const String postCommentPage = '/post-comment';
+  static const String tutorProfilePage = '/tutor-profile';
 }

@@ -163,12 +163,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                 maxWidth:
                                     MediaQuery.of(context).size.width * 0.7),
                             child: Text(message["text"],
-                                style: AppTextStyles(context).bodyText2.copyWith(
-                                  color: message["isMine"]
-                                      ? Colors.white
-                                      : Colors.white,
-                                  fontSize: 16,
-                                ))),
+                                style:
+                                    AppTextStyles(context).bodyText2.copyWith(
+                                          color: message["isMine"]
+                                              ? Colors.white
+                                              : Colors.white,
+                                          fontSize: 16,
+                                        ))),
                         Padding(
                           padding:
                               EdgeInsets.symmetric(vertical: 2, horizontal: 4),
@@ -202,8 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
           IconButton(
               onPressed: () => context.pop(),
-              icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 20)
-          ),
+              icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 20)),
           Stack(
             children: [
               CircleAvatar(
@@ -228,8 +228,8 @@ class _ChatScreenState extends State<ChatScreen> {
           SizedBox(width: 10),
           Text(widget.name,
               style: AppTextStyles(context).bodyText1.copyWith(
-                fontSize: 20,
-              )),
+                    fontSize: 20,
+                  )),
           SizedBox(width: 8),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -238,10 +238,10 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Text(widget.subject,
                 style: AppTextStyles(context).bodyText1.copyWith(
-                  color: AppColors.color600,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14,
-                )),
+                      color: AppColors.color600,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 14,
+                    )),
           ),
           Spacer(),
           IconButton(
@@ -273,25 +273,29 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Container(
                   decoration: BoxDecoration(
                       color: isDarkMode
-                          ? Theme.of(context).colorScheme.surface.withOpacity(0.85)
+                          ? Theme.of(context)
+                              .colorScheme
+                              .surface
+                              .withOpacity(0.85)
                           : Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isDarkMode
-                            ? Colors.white.withOpacity(0.08) // tạo border nhẹ cho dark mode
+                            ? Colors.white.withOpacity(
+                                0.08) // tạo border nhẹ cho dark mode
                             : Colors.transparent,
                       ),
                       boxShadow: [
                         BoxShadow(
                           color: isDarkMode
-                              ? Colors.black.withOpacity(0.3) // bóng nhẹ dark mode
+                              ? Colors.black
+                                  .withOpacity(0.3) // bóng nhẹ dark mode
                               : Colors.grey.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: Offset(0, 3),
                         )
-                      ]
-                  ),
+                      ]),
                   child: Row(children: [
                     SizedBox(width: 10),
                     Expanded(
@@ -302,9 +306,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       decoration: InputDecoration(
                         hintText: "Nhập tin nhắn...",
                         hintStyle: AppTextStyles(context).bodyText2.copyWith(
-                          color: AppColors.color600,
-                          fontSize: 16,
-                        ),
+                              color: AppColors.color600,
+                              fontSize: 16,
+                            ),
                         border: InputBorder.none,
                       ),
                       onTap: () {
@@ -315,18 +319,16 @@ class _ChatScreenState extends State<ChatScreen> {
                     IconButton(
                         onPressed: () {},
                         icon: Icon(Icons.attach_file_outlined,
-                            color: isDarkMode ? Colors.blueAccent : AppColors.color600
-                        )),
+                            color: isDarkMode
+                                ? Colors.blueAccent
+                                : AppColors.color600)),
                     IconButton(
                         onPressed: () => {},
                         icon: Icon(Icons.keyboard_voice_outlined,
-                            color: isDarkMode ? Colors.blueAccent : AppColors.color600
-                        )
-                    ),
-                  ]
-                  )
-              )
-          ),
+                            color: isDarkMode
+                                ? Colors.blueAccent
+                                : AppColors.color600)),
+                  ]))),
           MaterialButton(
             onPressed: () {
               if (messageController.text.isNotEmpty) {
@@ -338,7 +340,7 @@ class _ChatScreenState extends State<ChatScreen> {
             },
             minWidth: 0,
             padding:
-            const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
+                const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
             shape: const CircleBorder(),
             color: Colors.blueAccent,
             child: const Icon(Icons.send, color: Colors.white, size: 28),

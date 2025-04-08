@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tutorconnect/data/models/post.dart';
 import 'package:tutorconnect/presentation/navigation/layout_scaffold.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
+import 'package:tutorconnect/presentation/screens/comment/comment_screen.dart';
 import 'package:tutorconnect/presentation/screens/history_session/history_session_screen.dart';
+import 'package:tutorconnect/presentation/screens/post/post_screen.dart';
 import 'package:tutorconnect/presentation/screens/scheduall/scheduall_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import '../screens/login/login_screen.dart';
@@ -12,12 +15,13 @@ import '../screens/message/message_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/student/home/student_home_screen.dart';
 import '../screens/student/tutor_map/tutor_map_screen.dart';
+import '../screens/tutor/tutor_profile_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: Routes.tutorMapPage,
+  initialLocation: Routes.homePage,
   routes: [
     // StatefulShellRoute chứa BottomNavigationBar
     StatefulShellRoute.indexedStack(
@@ -30,6 +34,14 @@ final router = GoRouter(
             GoRoute(
               path: Routes.homePage,
               builder: (context, state) => const StudentHomeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: Routes.postPage,
+              builder: (context, state) => const PostScreen(),
             ),
           ],
         ),
@@ -86,6 +98,7 @@ final router = GoRouter(
         );
       },
     ),
+
     GoRoute(
       path: Routes.historySessionPage,
       builder: (context, state) => const HistorySessionScreen(),
@@ -101,7 +114,19 @@ final router = GoRouter(
     GoRoute(
       path: Routes.tutorMapPage,
       builder: (context, state) => const TutorMapScreen(),
-    )
+    ),
+    GoRoute(
+      path: Routes.postCommentPage,
+      builder: (context, state) {
+        final post = state.extra as Post;
+        return CommentScreen(post: post);
+      },
+    ),
+    GoRoute(
+      path: Routes.tutorProfilePage,
+      builder: (context, state) => const TutorProfileScreen(),
+    ),
+
 
 
   ],

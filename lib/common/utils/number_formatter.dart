@@ -31,5 +31,7 @@ class NumberFormatter {
     return formatter.format(number);
   }
 
+
+
   NumberFormatter._();
 }

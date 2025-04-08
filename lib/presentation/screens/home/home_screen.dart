@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tutorconnect/presentation/widgets/custom_bottom_nav.dart';
 
 class HomeScreen extends StatelessWidget {
   final Widget child;
@@ -11,7 +10,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
           child: SafeArea(child: child)
       ),
-      bottomNavigationBar: CustomBottomNav(),
+      // bottomNavigationBar: CustomBottomNav(),
     );
   }
 }
