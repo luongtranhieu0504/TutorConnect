@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:tutorconnect/data/models/users.dart';
 import '../../../common/async_state.dart';
 import '../../../common/stream_wrapper.dart';
 import '../../../domain/repository/auth/login_repository.dart';
@@ -6,7 +7,9 @@ import '../../../domain/repository/auth/login_repository.dart';
 @injectable
 class LoginBloc {
   late final LoginRepository _loginRepository;
-  final signInBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
+  final signInBroadcast = StreamWrapper<AsyncState<UserModel>>(broadcast: true);
+  final resetPasswordBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
+  final updateBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
   final registerBroadcast = StreamWrapper<AsyncState<String>>(broadcast: true);
   final logoutBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
 
@@ -17,7 +20,7 @@ class LoginBloc {
     final result = await _loginRepository.signInWithEmail(email, password);
     result.when(
       success: (user) {
-        signInBroadcast.add(AsyncState.success(true));
+        signInBroadcast.add(AsyncState.success(user));
       },
       failure: (message) {
         signInBroadcast.add(AsyncState.failure(message));
@@ -26,14 +29,14 @@ class LoginBloc {
   }
 
   void resetPassword(String email) async {
-    signInBroadcast.add(const AsyncState.loading());
+    resetPasswordBroadcast.add(const AsyncState.loading());
     final result = await _loginRepository.resetPassword(email);
     result.when(
-      success: (user) {
-        signInBroadcast.add(AsyncState.success(true));
+      success: (role) {
+        resetPasswordBroadcast.add(AsyncState.success(true));
       },
       failure: (message) {
-        signInBroadcast.add(AsyncState.failure(message));
+        resetPasswordBroadcast.add(AsyncState.failure(message));
       },
     );
   }
@@ -53,14 +56,14 @@ class LoginBloc {
   }
 
   void updateUser(String uid, Map<String, dynamic> data) async {
-    signInBroadcast.add(const AsyncState.loading());
+    updateBroadcast.add(const AsyncState.loading());
     final result = await _loginRepository.updateUser(uid, data);
     result.when(
       success: (user) {
-        signInBroadcast.add(AsyncState.success(true));
+        updateBroadcast.add(AsyncState.success(true));
       },
       failure: (message) {
-        signInBroadcast.add(AsyncState.failure(message));
+        updateBroadcast.add(AsyncState.failure(message));
       },
     );
   }

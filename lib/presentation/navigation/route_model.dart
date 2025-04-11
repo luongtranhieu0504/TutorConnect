@@ -2,7 +2,8 @@ class Routes {
   static const String loginPage = '/login';
   static const String registerPage = '/register';
   static const String mainPage = '/main';
-  static const String homePage = '/home';
+  static const String studentHomePage = '/student_home';
+  static const String tutorHomePage = '/tutor_home';
   static const String schedulePage = '/schedule';
   static const String messagePage = '/message';
   static const String profilePage = '/profile';

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
+import 'package:tutorconnect/data/models/users.dart';
 
 import '../../../common/task_result.dart';
 import '../../../domain/repository/auth/login_repository.dart';
@@ -14,28 +15,33 @@ class LoginRepositoryImpl implements LoginRepository {
 
 
 
-  @override
-  Future<TaskResult<bool>> signInWithEmail(String email,String password) async {
-    try {
-      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      // final User? user = credential.user;
-      // if (user == null) {
-      //   return TaskResult.failure("User not found");
-      // }
-      // DocumentSnapshot userSnapshot = await _firestore.collection('users').doc(user.uid).get();
-      // if (!userSnapshot.exists) {
-      //   return TaskResult.failure("User not found");
-      // }
-      // UserModel loggedInUser = UserModel.fromJson(userSnapshot.data() as Map<String, dynamic>);
-      if (credential.user != null) {
-        return TaskResult.success(true);
-      } else {
-        return TaskResult.failure("Authentication failed");
-      }
-    } catch (e) {
-      return TaskResult.failure("Unexpected error: $e");
-    }
-  }
+ @override
+ Future<TaskResult<UserModel>> signInWithEmail(String email, String password) async {
+   try {
+     // Đăng nhập với email và mật khẩu
+     final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+     final User? user = credential.user;
+
+     if (user == null) {
+       return TaskResult.failure("User not found");
+     }
+
+     // Lấy dữ liệu người dùng từ Firestore
+     final DocumentSnapshot userSnapshot = await _firestore.collection('users').doc(user.uid).get();
+     if (!userSnapshot.exists) {
+       return TaskResult.failure("User data not found in Firestore");
+     }
+     // Chuyển đổi dữ liệu Firestore thành UserModel
+     final Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+     final UserModel userModel = UserModel.fromJson(userData);
+     print("UserModel retrieved successfully: ${userModel.toString()}");
+
+     // Trả về UserModel
+     return TaskResult.success(userModel);
+   } catch (e) {
+     return TaskResult.failure("Unexpected error: $e");
+   }
+ }
 
   @override
   Future<TaskResult<bool>> logout() async{

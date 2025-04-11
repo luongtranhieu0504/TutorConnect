@@ -38,7 +38,7 @@
 //                   fontSize: 19),
 //               backgroundColor: Colors.white,
 //             )),
-//         home: const SplashScreen());
+//         tutor_home: const SplashScreen());
 //   }
 // }
 //

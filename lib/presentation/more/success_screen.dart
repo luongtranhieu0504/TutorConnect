@@ -47,7 +47,7 @@ class SuccessScreen extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              "You have signed up successfully. Go to home & start exploring courses",
+              "You have signed up successfully. Go to tutor_home & start exploring courses",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.black54),
             ),

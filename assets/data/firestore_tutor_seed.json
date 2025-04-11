@@ -1,0 +1,334 @@
+{
+  "tutors": [
+    {
+      "document_id": "demo-tutor-1",
+      "data": {
+        "uid": "demo-tutor-1",
+        "email": "tutor1@demo.com",
+        "role": "tutor",
+        "name": "Thầy Nguyễn Văn A",
+        "school": "ĐH Sư phạm TP.HCM",
+        "grade": null,
+        "phone": "+84 912345671",
+        "photoUrl": "https://api.multiavatar.com/tutor1.png",
+        "bio": "Tôi là gia sư với nhiều năm kinh nghiệm trong giảng dạy và luyện thi.",
+        "address": "Q.10, Hồ Chí Minh",
+        "studentProfile": null,
+        "tutorProfile": {
+          "subjects": [
+            "Hóa",
+            "Tiếng Anh"
+          ],
+          "degrees": [
+            "Cử nhân Sư phạm",
+            "Thạc sĩ Giáo dục"
+          ],
+          "experienceYears": 3,
+          "pricePerHour": 170000,
+          "rating": 4.6,
+          "reviews": [
+            {
+              "studentId": "student-1",
+              "rating": 5,
+              "comment": "Gia sư dạy rất tốt 1!",
+              "date": "2025-03-19T00:00:00"
+            },
+            {
+              "studentId": "student-2",
+              "rating": 4,
+              "comment": "Gia sư dạy rất tốt 2!",
+              "date": "2025-03-18T00:00:00"
+            }
+          ],
+          "availability": [
+            {
+              "day_of_week": "Monday",
+              "time_slots": [
+                "15:00-17:00",
+                "19:00-21:00"
+              ]
+            },
+            {
+              "day_of_week": "Wednesday",
+              "time_slots": [
+                "09:00-11:00"
+              ]
+            }
+          ],
+          "bio": "Tôi yêu nghề giảng dạy và luôn cố gắng hỗ trợ học viên hết mình.",
+          "certifications": [
+            {
+              "title": "Chứng chỉ sư phạm",
+              "file_url": "https://example.com/cert.png",
+              "issued_at": "2023-06-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "document_id": "demo-tutor-2",
+      "data": {
+        "uid": "demo-tutor-2",
+        "email": "tutor2@demo.com",
+        "role": "tutor",
+        "name": "Thầy Nguyễn Văn B",
+        "school": "ĐH Sư phạm TP.HCM",
+        "grade": null,
+        "phone": "+84 912345672",
+        "photoUrl": "https://api.multiavatar.com/tutor2.png",
+        "bio": "Tôi là gia sư với nhiều năm kinh nghiệm trong giảng dạy và luyện thi.",
+        "address": "Q.10, Hồ Chí Minh",
+        "studentProfile": null,
+        "tutorProfile": {
+          "subjects": [
+            "Toán",
+            "Lý"
+          ],
+          "degrees": [
+            "Cử nhân Sư phạm",
+            "Thạc sĩ Giáo dục"
+          ],
+          "experienceYears": 4,
+          "pricePerHour": 190000,
+          "rating": 4.7,
+          "reviews": [
+            {
+              "studentId": "student-1",
+              "rating": 5,
+              "comment": "Gia sư dạy rất tốt 1!",
+              "date": "2025-03-19T00:00:00"
+            },
+            {
+              "studentId": "student-2",
+              "rating": 4,
+              "comment": "Gia sư dạy rất tốt 2!",
+              "date": "2025-03-18T00:00:00"
+            }
+          ],
+          "availability": [
+            {
+              "day_of_week": "Monday",
+              "time_slots": [
+                "15:00-17:00",
+                "19:00-21:00"
+              ]
+            },
+            {
+              "day_of_week": "Wednesday",
+              "time_slots": [
+                "09:00-11:00"
+              ]
+            }
+          ],
+          "bio": "Tôi yêu nghề giảng dạy và luôn cố gắng hỗ trợ học viên hết mình.",
+          "certifications": [
+            {
+              "title": "Chứng chỉ sư phạm",
+              "file_url": "https://example.com/cert.png",
+              "issued_at": "2023-06-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "document_id": "demo-tutor-3",
+      "data": {
+        "uid": "demo-tutor-3",
+        "email": "tutor3@demo.com",
+        "role": "tutor",
+        "name": "Thầy Nguyễn Văn C",
+        "school": "ĐH Sư phạm TP.HCM",
+        "grade": null,
+        "phone": "+84 912345673",
+        "photoUrl": "https://api.multiavatar.com/tutor3.png",
+        "bio": "Tôi là gia sư với nhiều năm kinh nghiệm trong giảng dạy và luyện thi.",
+        "address": "Q.10, Hồ Chí Minh",
+        "studentProfile": null,
+        "tutorProfile": {
+          "subjects": [
+            "Hóa",
+            "Tiếng Anh"
+          ],
+          "degrees": [
+            "Cử nhân Sư phạm",
+            "Thạc sĩ Giáo dục"
+          ],
+          "experienceYears": 5,
+          "pricePerHour": 210000,
+          "rating": 4.8,
+          "reviews": [
+            {
+              "studentId": "student-1",
+              "rating": 5,
+              "comment": "Gia sư dạy rất tốt 1!",
+              "date": "2025-03-19T00:00:00"
+            },
+            {
+              "studentId": "student-2",
+              "rating": 4,
+              "comment": "Gia sư dạy rất tốt 2!",
+              "date": "2025-03-18T00:00:00"
+            }
+          ],
+          "availability": [
+            {
+              "day_of_week": "Monday",
+              "time_slots": [
+                "15:00-17:00",
+                "19:00-21:00"
+              ]
+            },
+            {
+              "day_of_week": "Wednesday",
+              "time_slots": [
+                "09:00-11:00"
+              ]
+            }
+          ],
+          "bio": "Tôi yêu nghề giảng dạy và luôn cố gắng hỗ trợ học viên hết mình.",
+          "certifications": [
+            {
+              "title": "Chứng chỉ sư phạm",
+              "file_url": "https://example.com/cert.png",
+              "issued_at": "2023-06-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "document_id": "demo-tutor-4",
+      "data": {
+        "uid": "demo-tutor-4",
+        "email": "tutor4@demo.com",
+        "role": "tutor",
+        "name": "Thầy Nguyễn Văn D",
+        "school": "ĐH Sư phạm TP.HCM",
+        "grade": null,
+        "phone": "+84 912345674",
+        "photoUrl": "https://api.multiavatar.com/tutor4.png",
+        "bio": "Tôi là gia sư với nhiều năm kinh nghiệm trong giảng dạy và luyện thi.",
+        "address": "Q.10, Hồ Chí Minh",
+        "studentProfile": null,
+        "tutorProfile": {
+          "subjects": [
+            "Toán",
+            "Lý"
+          ],
+          "degrees": [
+            "Cử nhân Sư phạm",
+            "Thạc sĩ Giáo dục"
+          ],
+          "experienceYears": 6,
+          "pricePerHour": 230000,
+          "rating": 4.9,
+          "reviews": [
+            {
+              "studentId": "student-1",
+              "rating": 5,
+              "comment": "Gia sư dạy rất tốt 1!",
+              "date": "2025-03-19T00:00:00"
+            },
+            {
+              "studentId": "student-2",
+              "rating": 4,
+              "comment": "Gia sư dạy rất tốt 2!",
+              "date": "2025-03-18T00:00:00"
+            }
+          ],
+          "availability": [
+            {
+              "day_of_week": "Monday",
+              "time_slots": [
+                "15:00-17:00",
+                "19:00-21:00"
+              ]
+            },
+            {
+              "day_of_week": "Wednesday",
+              "time_slots": [
+                "09:00-11:00"
+              ]
+            }
+          ],
+          "bio": "Tôi yêu nghề giảng dạy và luôn cố gắng hỗ trợ học viên hết mình.",
+          "certifications": [
+            {
+              "title": "Chứng chỉ sư phạm",
+              "file_url": "https://example.com/cert.png",
+              "issued_at": "2023-06-01"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "document_id": "demo-tutor-5",
+      "data": {
+        "uid": "demo-tutor-5",
+        "email": "tutor5@demo.com",
+        "role": "tutor",
+        "name": "Thầy Nguyễn Văn E",
+        "school": "ĐH Sư phạm TP.HCM",
+        "grade": null,
+        "phone": "+84 912345675",
+        "photoUrl": "https://api.multiavatar.com/tutor5.png",
+        "bio": "Tôi là gia sư với nhiều năm kinh nghiệm trong giảng dạy và luyện thi.",
+        "address": "Q.10, Hồ Chí Minh",
+        "studentProfile": null,
+        "tutorProfile": {
+          "subjects": [
+            "Hóa",
+            "Tiếng Anh"
+          ],
+          "degrees": [
+            "Cử nhân Sư phạm",
+            "Thạc sĩ Giáo dục"
+          ],
+          "experienceYears": 7,
+          "pricePerHour": 250000,
+          "rating": 5.0,
+          "reviews": [
+            {
+              "studentId": "student-1",
+              "rating": 5,
+              "comment": "Gia sư dạy rất tốt 1!",
+              "date": "2025-03-19T00:00:00"
+            },
+            {
+              "studentId": "student-2",
+              "rating": 4,
+              "comment": "Gia sư dạy rất tốt 2!",
+              "date": "2025-03-18T00:00:00"
+            }
+          ],
+          "availability": [
+            {
+              "day_of_week": "Monday",
+              "time_slots": [
+                "15:00-17:00",
+                "19:00-21:00"
+              ]
+            },
+            {
+              "day_of_week": "Wednesday",
+              "time_slots": [
+                "09:00-11:00"
+              ]
+            }
+          ],
+          "bio": "Tôi yêu nghề giảng dạy và luôn cố gắng hỗ trợ học viên hết mình.",
+          "certifications": [
+            {
+              "title": "Chứng chỉ sư phạm",
+              "file_url": "https://example.com/cert.png",
+              "issued_at": "2023-06-01"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

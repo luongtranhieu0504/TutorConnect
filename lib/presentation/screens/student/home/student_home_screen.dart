@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tutorconnect/data/models/users.dart';
+import 'package:tutorconnect/presentation/screens/student/home/student_home_bloc.dart';
+import 'package:tutorconnect/presentation/screens/student/home/student_home_state.dart';
 import 'package:tutorconnect/presentation/widgets/button_custom.dart';
 import 'package:tutorconnect/presentation/widgets/search_text_field.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
 
+import '../../../../di/di.dart';
 import '../../../../theme/text_styles.dart';
 
 class StudentHomeScreen extends StatefulWidget {
-  const StudentHomeScreen({super.key});
+  final String uid;
+  const StudentHomeScreen({super.key, required this.uid});
 
   @override
   State<StudentHomeScreen> createState() => _HomeScreenState();
@@ -16,29 +22,40 @@ class StudentHomeScreen extends StatefulWidget {
 enum AppointmentStatus { pending, confirmed, completed }
 
 class _HomeScreenState extends State<StudentHomeScreen> {
+  final _bloc = getIt<StudentHomeBloc>();
   final _searchController = TextEditingController();
 
+  @override
+  initState() {
+    super.initState();
+    _bloc.getData(widget.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return _uiContent();
+    return Scaffold(
+      body: BlocBuilder<StudentHomeBloc, StudentHomeState>(
+        builder: (context, state) {
+          if (state is UserLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is UserSuccess) {
+            final user = (state).user;
+            return _uiContent(user);
+          } else if (state is UserFailure) {
+            return Center(child: Text(state.message));
+          }
+          return Center(child: Text("Unknown state"));
+        },
+        bloc: _bloc,
+      ),
+    );
   }
 
-  Widget _uiContent() {
+  Widget _uiContent(UserModel user) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {},
-              icon: SvgPicture.asset('assets/icons/menu-2.svg')),
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: SvgPicture.asset(
-                  'assets/icons/Notification.svg',
-                  width: 50,
-                  height: 50,
-                )),
-          ],
+        appBar: PreferredSize(
+            preferredSize: Size(double.infinity, 100), 
+            child: _appBar(user),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -162,6 +179,58 @@ class _HomeScreenState extends State<StudentHomeScreen> {
               )),
         ));
   }
+  
+  Widget _appBar(UserModel user) {
+    return SafeArea(
+      child: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(user.photoUrl ?? ''),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Xin chào học sinh !',
+                        style: AppTextStyles(context).headingSemiBold.copyWith(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        user.name ?? '',
+                        style: AppTextStyles(context).headingMedium.copyWith(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: () {
+                  // Handle notification button press
+                },
+              )
+            ],
+          ),
+        ),
+      )
+    );
+  }
+  
 
   Widget _subjectCard(
       String title, String iconPath, Color color, int tutorCount) {

@@ -36,8 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (_) => const Center(child: CircularProgressIndicator()),
           );
         },
-        success: (data) {
-          context.go(Routes.homePage);
+        success: (user) {
+          context.go(
+            Routes.mainPage,
+            extra: user,
+          );
         },
         failure: (message) {
           Navigator.pop(context);

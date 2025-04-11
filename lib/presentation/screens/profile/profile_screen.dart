@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tutorconnect/data/models/users.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/widgets/button_custom.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
@@ -12,7 +13,8 @@ import '../../../di/di.dart';
 import '../login/login_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final UserModel user;
+  const ProfileScreen({super.key, required this.user});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -21,6 +23,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _bloc = getIt<LoginBloc>();
   Color selectedColor = AppColors.primary;
+
+
 
 
   @override
@@ -32,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100),
-        child: _appBar(),
+        child: _appBar(widget.user),
       ),
       body: SafeArea(
         child: Padding(
@@ -67,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _appBar() {
+  Widget _appBar(UserModel user) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {},
@@ -91,24 +95,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage('assets/images/ML1.png'),
+                backgroundImage: NetworkImage(user.photoUrl ?? ""),
               ),
               SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Nguyễn Văn A",
+                  Text(user.name ?? "",
                     style: AppTextStyles(context).bodyText1.copyWith(
                       fontSize: 20,
                     )
                   ),
                   SizedBox(height: 5),
-                  Text("nguyenvana@email.com",
+                  Text(user.email,
                     style: AppTextStyles(context).bodyText2.copyWith(
                       fontSize: 16,
                     )
                   ),
-                  Text("0912345678",
+                  Text(user.role,
                     style: AppTextStyles(context).bodyText2.copyWith(
                       fontSize: 16,
                     )
