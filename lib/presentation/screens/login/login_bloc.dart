@@ -7,7 +7,7 @@ import '../../../domain/repository/auth/login_repository.dart';
 @injectable
 class LoginBloc {
   late final LoginRepository _loginRepository;
-  final signInBroadcast = StreamWrapper<AsyncState<UserModel>>(broadcast: true);
+  final signInBroadcast = StreamWrapper<AsyncState<Map<String,String>>>(broadcast: true);
   final resetPasswordBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
   final updateBroadcast = StreamWrapper<AsyncState<bool>>(broadcast: true);
   final registerBroadcast = StreamWrapper<AsyncState<String>>(broadcast: true);
@@ -19,8 +19,8 @@ class LoginBloc {
     signInBroadcast.add(const AsyncState.loading());
     final result = await _loginRepository.signInWithEmail(email, password);
     result.when(
-      success: (user) {
-        signInBroadcast.add(AsyncState.success(user));
+      success: (data) {
+        signInBroadcast.add(AsyncState.success(data));
       },
       failure: (message) {
         signInBroadcast.add(AsyncState.failure(message));

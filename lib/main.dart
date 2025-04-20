@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:tutorconnect/data/manager/account.dart';
 import 'package:tutorconnect/presentation/navigation/route.dart';
 import 'package:tutorconnect/theme/app_theme.dart';
 import 'package:tutorconnect/theme/theme_provider.dart';
@@ -16,8 +17,9 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   configureDependencies();
-  // await setupMapConfig();// Load token
+  await setupMapConfig();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Account.instance.initialize();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),

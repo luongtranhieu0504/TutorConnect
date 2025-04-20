@@ -13,8 +13,7 @@ import '../../../di/di.dart';
 import '../login/login_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final UserModel user;
-  const ProfileScreen({super.key, required this.user});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -36,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(100),
-        child: _appBar(widget.user),
+        child: _appBar(),
       ),
       body: SafeArea(
         child: Padding(
@@ -71,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _appBar(UserModel user) {
+  Widget _appBar() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {},
@@ -95,24 +94,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: NetworkImage(user.photoUrl ?? ""),
+                backgroundImage: AssetImage("assets/images/ML1.png"),
               ),
               SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(user.name ?? "",
+                  Text("Luong Tran Hiue",
                     style: AppTextStyles(context).bodyText1.copyWith(
                       fontSize: 20,
                     )
                   ),
                   SizedBox(height: 5),
-                  Text(user.email,
+                  Text("luongtranhieu2@gmail.com",
                     style: AppTextStyles(context).bodyText2.copyWith(
                       fontSize: 16,
                     )
                   ),
-                  Text(user.role,
+                  Text("Học sinh",
                     style: AppTextStyles(context).bodyText2.copyWith(
                       fontSize: 16,
                     )

@@ -17,15 +17,7 @@ final List<UserModel> sampleTutorUsers = [
       degrees: ['Cử nhân Sư phạm Toán', 'Thạc sĩ Giáo dục'],
       experienceYears: 5,
       pricePerHour: 300000,
-      rating: 4.9,
-      reviews: [
-        TutorReview(
-          studentId: 'STU001',
-          rating: 5,
-          comment: 'Thầy dạy rất tận tâm và dễ hiểu',
-          date: DateTime(2024, 3, 10),
-        ),
-      ],
+      rating: 4.6,
       availability: [
         Availability(
           dayOfWeek: 'Thứ Hai',
@@ -57,15 +49,7 @@ final List<UserModel> sampleTutorUsers = [
       degrees: ['Cử nhân Ngôn ngữ Anh'],
       experienceYears: 3,
       pricePerHour: 250000,
-      rating: 4.7,
-      reviews: [
-        TutorReview(
-          studentId: 'STU002',
-          rating: 5,
-          comment: 'Cô giáo nhiệt tình, phương pháp dạy hiệu quả',
-          date: DateTime(2024, 3, 5),
-        ),
-      ],
+      rating: 4.8,
       availability: [
         Availability(
           dayOfWeek: 'Thứ Tư',

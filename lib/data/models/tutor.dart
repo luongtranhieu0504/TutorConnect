@@ -3,10 +3,9 @@ class TutorProfile {
   final List<String> degrees;
   final int experienceYears;
   final int pricePerHour;
-  final double rating;
-  final List<TutorReview> reviews;
   final List<Availability> availability;
   final String bio;
+  final double rating;
   final List<Certification> certifications;
 
   TutorProfile({
@@ -14,32 +13,39 @@ class TutorProfile {
     required this.degrees,
     required this.experienceYears,
     required this.pricePerHour,
-    required this.rating,
-    required this.reviews,
     required this.availability,
     required this.bio,
+    required this.rating,
     required this.certifications,
   });
 
   factory TutorProfile.fromJson(Map<String, dynamic> json) {
     return TutorProfile(
-      subjects: List<String>.from(json['subjects']),
-      degrees: List<String>.from(json['degrees']),
-      experienceYears: json['experience_years'],
-      pricePerHour: json['price_per_hour'],
-      rating: json['rating'].toDouble(),
-      reviews: (json['reviews'] as List)
-          .map((e) => TutorReview.fromJson(e))
-          .toList(),
-      availability: (json['availability'] as List)
+      subjects: (json['subjects'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      degrees: (json['degrees'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      experienceYears: (json['experienceYears'] is int)
+          ? json['experienceYears']
+          : int.tryParse(json['experienceYears']?.toString() ?? '0') ?? 0,
+      pricePerHour: (json['pricePerHour'] is int)
+          ? json['pricePerHour']
+          : int.tryParse(json['pricePerHour']?.toString() ?? '0') ?? 0,
+      rating: (json['rating'] is double)
+          ? json['rating']
+          : double.tryParse(json['rating']?.toString() ?? '0') ?? 0.0,
+      availability: (json['availability'] as List?)
+          ?.whereType<Map<String, dynamic>>()
           .map((e) => Availability.fromJson(e))
-          .toList(),
-      bio: json['bio'],
-      certifications: (json['certifications'] as List)
+          .toList() ??
+          [],
+      bio: json['bio'] as String? ?? '',
+      certifications: (json['certifications'] as List?)
+          ?.whereType<Map<String, dynamic>>()
           .map((e) => Certification.fromJson(e))
-          .toList(),
+          .toList() ??
+          [],
     );
   }
+
 
   Map<String, dynamic> toJson() {
     return {
@@ -47,59 +53,34 @@ class TutorProfile {
       'degrees': degrees,
       'experience_years': experienceYears,
       'price_per_hour': pricePerHour,
-      'rating': rating,
-      'reviews': reviews.map((e) => e.toJson()).toList(),
       'availability': availability.map((e) => e.toJson()).toList(),
       'bio': bio,
+      'rating': rating,
       'certifications': certifications.map((e) => e.toJson()).toList(),
     };
   }
 }
 
-class Location {
-  final String city;
-  final String district;
-
-  Location({required this.city, required this.district});
-
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      city: json['city'],
-      district: json['district'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'city': city,
-    'district': district,
-  };
-}
-
 class TutorReview {
   final String studentId;
+  final String studentName;
   final int rating;
   final String comment;
   final DateTime date;
 
   TutorReview({
     required this.studentId,
+    required this.studentName,
     required this.rating,
     required this.comment,
     required this.date,
   });
 
-  factory TutorReview.fromJson(Map<String, dynamic> json) {
-    return TutorReview(
-      studentId: json['student_id'],
-      rating: json['rating'],
-      comment: json['comment'],
-      date: DateTime.parse(json['date']),
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
       'student_id': studentId,
+      'student_name': studentName,
       'rating': rating,
       'comment': comment,
       'date': date.toIso8601String(),
@@ -115,8 +96,8 @@ class Availability {
 
   factory Availability.fromJson(Map<String, dynamic> json) {
     return Availability(
-      dayOfWeek: json['day_of_week'],
-      timeSlots: List<String>.from(json['time_slots']),
+      dayOfWeek: json['day_of_week'] as String? ?? '',
+      timeSlots: (json['time_slots'] as List?)?.map((e) => e.toString()).toList() ?? [],
     );
   }
 
@@ -139,9 +120,9 @@ class Certification {
 
   factory Certification.fromJson(Map<String, dynamic> json) {
     return Certification(
-      title: json['title'],
-      fileUrl: json['file_url'],
-      issuedAt: json['issued_at'],
+      title: json['title'] as String? ?? '',
+      fileUrl: json['file_url'] as String? ?? '',
+      issuedAt: json['issued_at'] as String? ?? '',
     );
   }
 

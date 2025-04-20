@@ -43,7 +43,7 @@ class _TutorHomeScreenState extends State<TutorHomeScreen> {
                           ),
                         ),
                         Text(
-                          '⭐ 4.8 from 36 reviews',
+                          '⭐ 4.8 from 36 review',
                           style: AppTextStyles(context).bodyText2.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

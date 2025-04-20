@@ -9,18 +9,27 @@ class TutorAnnotationClickListener extends OnPointAnnotationClickListener {
   final Map<String, UserModel> annotationTutorMap;
 
   TutorAnnotationClickListener(this.context, this.annotationTutorMap);
-
   @override
-  void onPointAnnotationClick(PointAnnotation annotation) {
+  bool onPointAnnotationClick(PointAnnotation annotation) {
     final tutor = annotationTutorMap[annotation.id];
     if (tutor != null) {
-      showModalBottomSheet(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        builder: (context) => TutorBottomSheet(tutor: tutor),
-      );
+      _showBottomSheet(tutor);
+      // showBottomSheet or do whatever
+    } else {
+      print("⚠️ Unknown annotation clicked: ${annotation.id}");
     }
+    return true;
+  }
+  void _showBottomSheet(UserModel tutor) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return TutorBottomSheet(tutor: tutor);
+      },
+    );
   }
 }

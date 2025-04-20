@@ -30,5 +30,23 @@ class StudentProfile {
       'comments': comments.map((e) => e.toJson()).toList(),
     };
   }
+
+  StudentProfile copyWith({
+    List<String>? favorites,
+    List<SessionModel>? learningHistory,
+    List<Post>? posts,
+    List<Comment>? comments,
+  }) {
+    return StudentProfile(
+      posts ?? this.posts,
+      comments ?? this.comments,
+      favorites ?? this.favorites,
+      learningHistory ?? this.learningHistory,
+    );
+  }
+
 }
+
+
+
 

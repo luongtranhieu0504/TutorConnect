@@ -4,13 +4,13 @@ import 'package:tutorconnect/theme/color_platte.dart';
 class SearchTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? labelText;
-  final VoidCallback? onPressed;
-
+  final ValueChanged<String>? onSubmitted;
 
   const SearchTextField(
       {super.key,
         this.controller,
-        this.labelText, this.onPressed,
+        this.labelText,
+        this.onSubmitted,
       });
 
   @override
@@ -30,13 +30,10 @@ class SearchTextField extends StatelessWidget {
                 BorderSide(color: AppColors.colorButton, width: 2),
                 borderRadius: BorderRadius.circular(10)),
             alignLabelWithHint: true,
-            // suffixIcon: IconButton(
-            //     onPressed: onPressed,
-            //     icon: SvgPicture.asset('assets/icons/adjustments-horizontal.svg')
-            // )
           ),
           keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.search,
+          onSubmitted: onSubmitted,
         )
     );
   }

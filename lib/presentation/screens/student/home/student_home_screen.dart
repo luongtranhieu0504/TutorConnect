@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tutorconnect/data/models/users.dart';
+import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/screens/student/home/student_home_bloc.dart';
 import 'package:tutorconnect/presentation/screens/student/home/student_home_state.dart';
 import 'package:tutorconnect/presentation/widgets/button_custom.dart';
 import 'package:tutorconnect/presentation/widgets/search_text_field.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
+import 'package:tutorconnect/theme/theme_ultils.dart';
 
 import '../../../../di/di.dart';
 import '../../../../theme/text_styles.dart';
@@ -63,9 +66,34 @@ class _HomeScreenState extends State<StudentHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SearchTextField(
-                    controller: _searchController,
-                    labelText: "Tìm kiếm",
+                  GestureDetector(
+                    onTap: () {
+                      context.push(
+                        Routes.tutorMapPage,
+                        extra: user
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey.withOpacity(0.7)),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Row(
+                        children: [
+                          themedIcon(Icons.search, context),
+                          SizedBox(width: 8),
+                          Text(
+                            "Tìm kiếm gia sư",
+                            style: AppTextStyles(context).bodyText1.copyWith(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          )
+                        ],
+                      )
+                    )
                   ),
                   SizedBox(height: 12),
                   Text(

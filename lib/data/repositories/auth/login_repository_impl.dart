@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
+import 'package:tutorconnect/data/manager/account.dart';
 import 'package:tutorconnect/data/models/users.dart';
 
 import '../../../common/task_result.dart';
@@ -13,10 +14,8 @@ class LoginRepositoryImpl implements LoginRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
-
  @override
- Future<TaskResult<UserModel>> signInWithEmail(String email, String password) async {
+ Future<TaskResult<Map<String,String>>> signInWithEmail(String email, String password) async {
    try {
      // Đăng nhập với email và mật khẩu
      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
@@ -25,19 +24,17 @@ class LoginRepositoryImpl implements LoginRepository {
      if (user == null) {
        return TaskResult.failure("User not found");
      }
-
      // Lấy dữ liệu người dùng từ Firestore
      final DocumentSnapshot userSnapshot = await _firestore.collection('users').doc(user.uid).get();
      if (!userSnapshot.exists) {
        return TaskResult.failure("User data not found in Firestore");
      }
-     // Chuyển đổi dữ liệu Firestore thành UserModel
-     final Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-     final UserModel userModel = UserModel.fromJson(userData);
-     print("UserModel retrieved successfully: ${userModel.toString()}");
+     final json = userSnapshot.data() as Map<String, dynamic>;
+     final userModel = UserModel.fromJson({...json, "uid": user.uid});
 
+     await Account.instance.saveUser(userModel);
      // Trả về UserModel
-     return TaskResult.success(userModel);
+     return TaskResult.success({"uid": user.uid, "role": userModel.role});
    } catch (e) {
      return TaskResult.failure("Unexpected error: $e");
    }
@@ -46,7 +43,8 @@ class LoginRepositoryImpl implements LoginRepository {
   @override
   Future<TaskResult<bool>> logout() async{
     try {
-      _auth.signOut();
+      await _auth.signOut();
+      await Account.instance.signOut();
       return TaskResult.success(true);
     } catch (e) {
       return TaskResult.failure(e.toString());
@@ -65,7 +63,6 @@ class LoginRepositoryImpl implements LoginRepository {
       return TaskResult.failure(e.toString());
     }
   }
-
   String _handleAuthError(String code) {
     switch (code) {
       case "user-not-found":

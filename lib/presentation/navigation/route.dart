@@ -37,11 +37,13 @@ final router = GoRouter(
               path: Routes.mainPage,
               builder: (context, state) {
                 // Lấy thông tin người dùng từ state
-                final user = state.extra as UserModel?;
-                if (user?.role == 'Gia sư') {
+                final data = state.extra as Map<String, String>?;
+                final role = data?['role'];
+                final uid = data?['uid'];
+                if (role == 'Gia sư') {
                   return const TutorHomeScreen();
-                } else if (user?.role == 'Học sinh') {
-                  return StudentHomeScreen(uid: user!.uid);
+                } else if (role == 'Học sinh') {
+                  return StudentHomeScreen(uid: uid!);
                 } else {
                   return const LoginScreen(); // Fallback in case of invalid role
                 }
@@ -77,12 +79,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: Routes.profilePage,
-              builder: (context, state) {
-                final user = state.extra as UserModel?;
-                return ProfileScreen(
-                  user: user!,
-                );
-              },
+              builder: (context, state) => const ProfileScreen(),
             ),
           ],
         ),
@@ -126,7 +123,9 @@ final router = GoRouter(
     // ),
     GoRoute(
       path: Routes.tutorMapPage,
-      builder: (context, state) => const TutorMapScreen(),
+      builder: (context, state) {
+        return TutorMapScreen();
+      },
     ),
     GoRoute(
       path: Routes.postCommentPage,
@@ -137,7 +136,15 @@ final router = GoRouter(
     ),
     GoRoute(
       path: Routes.tutorProfilePage,
-      builder: (context, state) => const TutorProfileScreen(),
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>;
+        final tutor = extra['tutor'] as UserModel;
+        final isCurrentUser = extra['isCurrentUser'] as bool;
+        return TutorProfileScreen(
+          tutor: tutor,
+          isCurrentUser: isCurrentUser,
+        );
+      }
     ),
 
 

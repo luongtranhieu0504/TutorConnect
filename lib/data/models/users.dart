@@ -43,29 +43,52 @@ class UserModel {
       "photoUrl": photoUrl ?? "",
       "bio": bio ?? "",
       "address": address ?? "",
-      'student_profile': studentProfile?.toJson(),
+      'studentProfile': studentProfile?.toJson(),
       'tutor_profile': tutorProfile?.toJson(),
     };
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final tutorProfileRaw = json['tutorProfile'];
+
     return UserModel(
-      uid: json["uid"],
-      email: json["email"],
-      role: json["role"],
-      name: json["name"],
-      school: json["school"],
-      grade: json["grade"],
-      phone: json["phone"],
-      photoUrl: json["photoUrl"],
-      bio: json["bio"],
-      address: json["address"],
-      studentProfile: json['student_profile'] != null
+      uid: json['uid'] ?? '',
+      email: json['email'] ?? '',
+      role: json['role'] ?? '',
+      name: json['name'],
+      school: json['school'],
+      grade: json['grade'],
+      phone: json['phone'],
+      photoUrl: json['photoUrl'],
+      bio: json['bio'],
+      address: json['address'],
+      studentProfile: json['student_profile'] is Map<String, dynamic>
           ? StudentProfile.fromJson(json['student_profile'])
           : null,
-      tutorProfile: json['tutor_profile'] != null
-          ? TutorProfile.fromJson(json['tutor_profile'])
+    tutorProfile: tutorProfileRaw is Map<String, dynamic>
+          ? TutorProfile.fromJson(tutorProfileRaw)
           : null,
+    );
+  }
+}
+
+extension UserModelCopyWith on UserModel {
+  UserModel copyWith({
+    StudentProfile? studentProfile,
+  }) {
+    return UserModel(
+      uid: uid,
+      email: email,
+      role: role,
+      name: name,
+      school: school,
+      grade: grade,
+      phone: phone,
+      photoUrl: photoUrl,
+      bio: bio,
+      address: address,
+      studentProfile: studentProfile ?? this.studentProfile,
+      tutorProfile: tutorProfile,
     );
   }
 }

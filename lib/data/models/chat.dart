@@ -1,7 +1,7 @@
 class ChatModel {
   final String id;
-  final String chatId;
   final String senderId;
+  final String receiverId;
   final String content;
   final String type; // text, image, file
   final DateTime timestamp;
@@ -9,7 +9,7 @@ class ChatModel {
 
   ChatModel({
     required this.id,
-    required this.chatId,
+    required this.receiverId,
     required this.senderId,
     required this.content,
     required this.type,
@@ -20,7 +20,7 @@ class ChatModel {
   factory ChatModel.fromJson(Map<String, dynamic> json) {
     return ChatModel(
       id: json['id'],
-      chatId: json['chat_id'],
+      receiverId: json['receiver_id'],
       senderId: json['sender_id'],
       content: json['content'],
       type: json['type'],
@@ -31,7 +31,7 @@ class ChatModel {
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'chat_id': chatId,
+    'receiver_id': receiverId,
     'sender_id': senderId,
     'content': content,
     'type': type,

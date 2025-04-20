@@ -17,7 +17,7 @@ class NumberFormatter {
   }
 
   static String formatCurrency(
-      double value, {
+      int value, {
         int decimalDigits = 0,
         bool withSymbol = false,
       }) {

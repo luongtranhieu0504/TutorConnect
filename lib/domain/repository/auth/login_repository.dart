@@ -4,7 +4,8 @@ import 'package:tutorconnect/data/models/users.dart';
 import '../../../common/task_result.dart';
 
 abstract interface class LoginRepository {
-  Future<TaskResult<UserModel>> signInWithEmail(String email, String password);
+  Future<TaskResult<Map<String, String>>> signInWithEmail(String email, String password);
+
   Future<TaskResult<String>> signUpWithEmail({
     required String email,
     required String password,

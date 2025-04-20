@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
     _bloc.signInBroadcast.listen((state) {
       state.when(
         loading: () {
@@ -36,10 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (_) => const Center(child: CircularProgressIndicator()),
           );
         },
-        success: (user) {
+        success: (data) {
           context.go(
             Routes.mainPage,
-            extra: user,
+            extra: data,
           );
         },
         failure: (message) {

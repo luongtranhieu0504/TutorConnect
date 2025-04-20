@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tutorconnect/presentation/navigation/route_model.dart';
 
 import '../../data/models/users.dart';
 import '../../theme/text_styles.dart';
@@ -15,10 +17,21 @@ class TutorBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Ảnh đại diện
-          // CircleAvatar(
-          //   radius: 40,
-          //   backgroundImage: AssetImage('assets/avatars/LM1.png'),
-          // ),
+          GestureDetector(
+            child: CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(tutor.photoUrl ?? ''),
+            ),
+            onTap: () {
+              context.push(
+                Routes.tutorProfilePage,
+                extra: {
+                  'tutor': tutor,
+                  'isCurrentUser': false,
+                },
+              );
+            },
+          ),
           SizedBox(height: 12),
           // Tên
           Text(
@@ -38,18 +51,19 @@ class TutorBottomSheet extends StatelessWidget {
             "💰 Giá: ${tutor.tutorProfile?.pricePerHour}/buổi",
             style: AppTextStyles(context).bodyText2,
           ),
-
           // Đánh giá
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                "⭐ ${tutor.tutorProfile?.rating}",
+                style: AppTextStyles(context).bodyText2,
+              ),
               Icon(Icons.star, color: Colors.amber),
               SizedBox(width: 4),
-              Text("${tutor.tutorProfile?.rating} lượt đánh giá)"),
             ],
           ),
           SizedBox(height: 12),
-
           // Nút trao đổi
           ElevatedButton.icon(
             onPressed: () {

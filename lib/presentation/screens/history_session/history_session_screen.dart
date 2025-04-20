@@ -166,7 +166,7 @@ class _HistorySessionScreenState extends State<HistorySessionScreen> {
                     style: AppTextStyles(context).bodyText1
                         .copyWith(color: AppColors.color500, fontSize: 14),
                   ),
-                  Text("${NumberFormatter.formatCurrency(session.tuition)} VND",
+                  Text("${NumberFormatter.formatCurrency(session.tuition as int)} VND",
                       style: AppTextStyles(context).bodyText1
                           .copyWith(fontSize: 14))
                 ]),
