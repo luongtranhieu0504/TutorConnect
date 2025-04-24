@@ -2,20 +2,23 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tutorconnect/common/stream_wrapper.dart';
-
 import 'package:tutorconnect/domain/repository/tutor_profile_repository.dart';
 import 'package:tutorconnect/presentation/screens/tutor/tutor_profile/tutor_profile_state.dart';
+
 import '../../../../common/async_state.dart';
+import '../../../../data/manager/account.dart';
 import '../../../../data/models/reviews.dart';
-import '../../../../data/models/tutor.dart';
+import '../../../../domain/repository/chat_repositpry.dart';
 
 @injectable
 class TutorProfileBloc extends Cubit<TutorProfileState> {
   final TutorProfileRepository _tutorProfileRepository;
+  final ChatRepository _chatRepository;
 
   final addBroadcast = StreamWrapper<AsyncState<void>>(broadcast: true);
   final addFavoriteBroadcast = StreamWrapper<AsyncState<void>>(broadcast: true);
-  TutorProfileBloc(this._tutorProfileRepository) : super(TutorProfileInitial());
+  final openChatBroadcast = StreamWrapper<AsyncState<String>>(broadcast: true);
+  TutorProfileBloc(this._tutorProfileRepository, this._chatRepository) : super(TutorProfileInitial());
 
   void getTutorProfile(String uid) async {
     emit(TutorProfileLoading());
@@ -49,6 +52,24 @@ class TutorProfileBloc extends Cubit<TutorProfileState> {
       failure: (message) => addBroadcast.add(AsyncState.failure(message)),
     );
   }
+
+  Future<void> openOrCreateChat(String tutorId) async {
+    openChatBroadcast.add(AsyncState.loading());
+
+    final result = await _chatRepository.createOrGetConversation(
+      userId1: Account.instance.user.uid,
+      userId2: tutorId,
+    );
+    result.when(
+      success: (conversationId) {
+        openChatBroadcast.add(AsyncState.success(conversationId));
+      },
+      failure: (message) {
+        openChatBroadcast.add(AsyncState.failure(message));
+      },
+    );
+  }
+
 
   void addFavoriteTutor({
     required String studentId,

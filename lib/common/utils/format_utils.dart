@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class FormatUtils {
@@ -36,5 +37,12 @@ class FormatUtils {
       return 'Just now';
     }
   }
+
+  static String formatTimeAgoWithTimeStamp(Timestamp timestamp) {
+    final dateTime = timestamp.toDate();
+    return formatTimeAgo(dateTime);
+  }
+
+
 
 }

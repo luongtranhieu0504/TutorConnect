@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tutorconnect/data/manager/status.dart';
 import 'package:tutorconnect/data/models/users.dart';
 
 import '../../common/stream_wrapper.dart';
@@ -24,6 +25,12 @@ class Account {
     _user = await _loadUserFromPrefs();
     _isLoggedIn = _user != null;
     userBroadcast.add(_user);
+
+    // Set user online status
+    if (_isLoggedIn) {
+      // Assuming you have a method to set user online
+      await StatusManager.instance.setUserOnline();
+    }
   }
 
   Future<void> saveUser(UserModel? user) async {
@@ -53,11 +60,13 @@ class Account {
   }
 
   Future<void> signOut() async {
+    await StatusManager.instance.setUserOffline();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyUser);
     _user = null;
     _isLoggedIn = false;
     userBroadcast.add(null);
   }
+
 
 }

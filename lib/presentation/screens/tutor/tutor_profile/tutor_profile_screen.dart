@@ -9,6 +9,7 @@ import 'package:tutorconnect/data/manager/account.dart';
 import 'package:tutorconnect/data/models/reviews.dart';
 import 'package:tutorconnect/data/models/users.dart';
 import 'package:tutorconnect/di/di.dart';
+import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/screens/tutor/tutor_profile/tutor_profile_bloc.dart';
 import 'package:tutorconnect/presentation/screens/tutor/tutor_profile/tutor_profile_state.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
@@ -66,6 +67,33 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
         },
       );
     });
+    _bloc.openChatBroadcast.listen((state) {
+      state.when(
+        loading: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const Center(child: CircularProgressIndicator()),
+          );
+        },
+        success: (data) {
+          Navigator.pop(context);
+          context.push(
+            Routes.chatPage,
+            extra: {
+              'conversationId': data,
+              'user': widget.tutor,
+            }
+          );
+        },
+        failure: (message) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Mở cuộc trò chuyện thất bại!")),
+          );
+        },
+      );
+    });
   }
 
 
@@ -110,7 +138,7 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  widget.tutor.email ?? '',
+                  widget.tutor.email,
                   style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
                 SizedBox(height: 20),
@@ -143,7 +171,7 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () {
-
+                            _bloc.openOrCreateChat(widget.tutor.uid);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.color500,
@@ -160,7 +188,6 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
                           ),
                         ),
                       )
-                  
                     ],
                   ),
                 ),

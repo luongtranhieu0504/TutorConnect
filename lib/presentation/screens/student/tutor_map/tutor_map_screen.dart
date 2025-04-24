@@ -12,7 +12,6 @@ import 'package:tutorconnect/presentation/screens/student/tutor_map/tutor_map_bl
 import 'package:tutorconnect/presentation/screens/student/tutor_map/tutor_map_state.dart';
 
 import '../../../../common/utils/convert_widget_image.dart';
-import 'annotation_click_listenner.dart';
 import 'marker_service.dart';
 
 class TutorMapScreen extends StatefulWidget {
@@ -29,7 +28,6 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
   late double selectedDistanceInKm = 7.0;
   late String selectedSubject = 'Tất cả';
   MapboxMap? mapboxMap;
-  final Map<String, UserModel> _annotationTutorMap = {};
   late final Point _center;
   late final MarkerService markerService;
   final List<String> subjects = ["Tất cả", "Toán", "Văn", "Anh", "Lý", "Hóa", "Tin Học"];

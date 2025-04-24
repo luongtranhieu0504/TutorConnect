@@ -7,11 +7,11 @@ import 'package:tutorconnect/presentation/screens/comment/comment_screen.dart';
 import 'package:tutorconnect/presentation/screens/history_session/history_session_screen.dart';
 import 'package:tutorconnect/presentation/screens/post/post_screen.dart';
 import 'package:tutorconnect/presentation/screens/scheduall/scheduall_screen.dart';
+
 import '../../data/models/users.dart';
 import '../screens/chat/chat_screen.dart';
 import '../screens/login/login_screen.dart';
 import '../screens/login/register_screen.dart';
-import '../screens/main_screen.dart';
 import '../screens/message/message_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/student/home/student_home_screen.dart';
@@ -99,12 +99,12 @@ final router = GoRouter(
       path: Routes.chatPage,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
-        final extra = state.extra as Map<String, dynamic>? ?? {};
+        final extra = state.extra as Map<String, dynamic>;
+        final user = extra['user'] as UserModel;
+        final conversationId = extra['conversationId'] as String;
         return ChatScreen(
-          name: extra['name'] ?? '',
-          subject: extra['subject'] ?? '',
-          isOnline: extra['isOnline'] ?? false,
-          avatarUrl: extra['avatarUrl'] ?? '',
+          conversationId,
+          user : user,
         );
       },
     ),

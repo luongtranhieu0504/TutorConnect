@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tutorconnect/data/models/message.dart';
+import 'package:tutorconnect/common/utils/format_utils.dart';
+import 'package:tutorconnect/data/manager/account.dart';
+import 'package:tutorconnect/data/manager/status.dart';
+import 'package:tutorconnect/data/models/coversation.dart';
+import 'package:tutorconnect/di/di.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
+import 'package:tutorconnect/presentation/screens/message/message_bloc.dart';
+import 'package:tutorconnect/presentation/screens/message/message_state.dart';
 import 'package:tutorconnect/presentation/widgets/search_text_field.dart';
-import 'package:tutorconnect/theme/color_platte.dart';
 import 'package:tutorconnect/theme/text_styles.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -14,52 +20,46 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
+  final _bloc = getIt<MessageBloc>();
   final _searchController = TextEditingController();
-  final List<MessageModel> chatUsers = [
-    MessageModel(
-      name: "Robert Fox",
-      subject: "ARCH116",
-      message: "Hello, I need help with the recent...",
-      time: "3h ago",
-      avatarUrl: "assets/images/ML1.png",
-      isUnread: true,
-      isOnline: true, // Online
-    ),
-    MessageModel(
-      name: "Jane Cooper",
-      subject: "MAT116",
-      message: "Hello, I need to fix that as...",
-      time: "19h ago",
-      avatarUrl: "assets/images/ML1.png",
-      isUnread: false,
-      isOnline: false, // Offline
-    ),
-    MessageModel(
-      name: "Esther Howard",
-      subject: "MAT116",
-      message: "Hello, I'm struggling with a conce...",
-      time: "1d ago",
-      avatarUrl: "assets/images/ML1.png",
-      isUnread: true,
-      isOnline: true, // Online
-    ),
-    MessageModel(
-      name: "Jacob Jones",
-      subject: "ARCH116",
-      message: "Hi, I have some questions about t...",
-      time: "2d ago",
-      avatarUrl: "assets/images/ML1.png",
-      isUnread: false,
-      isOnline: false, // Offline
-    ),
-  ];
+  final user = Account.instance.user;
+  final Map<String, String> _userStatuses = {};
+
+
+  bool isUnread = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc.getConversations();
+    
+    StatusManager.instance.userStatusStream.listen((statuses) {
+      setState(() {
+        _userStatuses.addAll(statuses);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return _uiContent();
+    return BlocBuilder<MessageBloc, MessageState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        if (state is MessageLoadingState) {
+          return Center(child: CircularProgressIndicator());
+        } else if (state is MessageSuccessState) {
+          final chatUsers = state.chatUsers;
+          return _uiContent(chatUsers);
+
+        } else if (state is MessageFailureState) {
+          return Center(child: Text("Error: ${state.error}"));
+        }
+        return Container();
+      },
+    );
   }
 
-  Widget _uiContent() {
+  Widget _uiContent(List<ConversationWithUser> chatUsers) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Tin nhắn"),
@@ -79,7 +79,7 @@ class _MessageScreenState extends State<MessageScreen> {
               child: ListView.builder(
                 itemCount: chatUsers.length,
                 itemBuilder: (context, index) {
-                  return _messageCard(chatUsers[index], index == chatUsers.length - 1,context);
+                  return _messageCard(chatUsers[index],context);
                 })
             )
           ],
@@ -88,17 +88,32 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  Widget _messageCard(MessageModel message, bool isLastItem, BuildContext context) {
+  Widget _messageCard(ConversationWithUser conversation, BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final otherUserId = conversation.otherUser.uid;
+
+
+    // Try to get status, or trigger status listener if not available
+    if (!_userStatuses.containsKey(otherUserId)) {
+      StatusManager.instance.listenToUserStatus(otherUserId);
+      StatusManager.instance.getUserStatus(otherUserId).then((status) {
+        if (mounted) {
+          setState(() {
+            _userStatuses[otherUserId] = status;
+          });
+        }
+      });
+    }
+
+    final isOnline = _userStatuses[otherUserId] == 'online';
     return GestureDetector(
       onTap: () {
-        context.push(Routes.chatPage,
-            extra: {
-              "name": message.name,
-              "subject": message.subject,
-              "isOnline": message.isOnline,
-              "avatarUrl": message.avatarUrl
-            }
+        context.push(
+          Routes.chatPage,
+          extra: {
+            'user': conversation.otherUser,
+            'conversationId': conversation.conversation.id,
+          },
         );
       },
       child: Column(
@@ -112,9 +127,9 @@ class _MessageScreenState extends State<MessageScreen> {
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundImage: AssetImage(message.avatarUrl),
+                      backgroundImage: NetworkImage(conversation.otherUser.photoUrl!),
                     ),
-                    if (message.isOnline)
+                    if (isOnline)
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -144,16 +159,16 @@ class _MessageScreenState extends State<MessageScreen> {
                       )
                   ],
                 ),
-                SizedBox(width: 16),
+                SizedBox(width: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Text(
-                          message.name,
+                          conversation.otherUser.name!,
                           style: AppTextStyles(context).bodyText2.copyWith(
-                            fontSize: 18,
+                            fontSize: 15,
                           )
                         ),
                         SizedBox(width: 8),
@@ -162,39 +177,31 @@ class _MessageScreenState extends State<MessageScreen> {
                           decoration: BoxDecoration(
                             color: isDarkMode ? Colors.black : Color(0xFFE2E8F0),
                           ),
-                          child: Text(
-                            message.subject,
-                            style: AppTextStyles(context).bodyText2.copyWith(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14,
-                            )
-                          ),
                         )
                       ]
                     ),
                     Text(
-                      message.message,
+                      conversation.conversation.lastMessage!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: message.isUnread ? AppTextStyles(context).bodyText2.copyWith(
-                        fontSize: 15,
+                      style: isUnread ? AppTextStyles(context).bodyText2.copyWith(
+                        fontSize: 12,
                       ) : AppTextStyles(context).bodyText2.copyWith(
-                        fontSize: 15,
+                        fontSize: 12,
                       )
                     )
                   ]
                 ),
                 Spacer(),
                 Text(
-                  message.time,
+                  FormatUtils.formatTimeAgoWithTimeStamp(conversation.conversation.lastTimestamp!),
                   style: AppTextStyles(context).bodyText2.copyWith(
-                    fontSize: 14
+                    fontSize: 11
                   )
                 )
               ],
             ),
           ),
-          if (!isLastItem)
             Divider(
               color: Colors.grey,
               thickness: 1,

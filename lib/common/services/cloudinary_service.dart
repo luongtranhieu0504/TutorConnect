@@ -2,71 +2,54 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "package:http/http.dart" as http;
-import 'package:crypto/crypto.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'db_services.dart'; // For accessing device directories
+Future<Map<String, String>?> uploadToCloudinary(File file, String mediaType) async {
+  try {
+    String cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME']!;
 
-Future<bool> uploadToCloudinary(FilePickerResult? filePickerResult) async {
-  if (filePickerResult == null || filePickerResult.files.isEmpty) {
-    print("No file selected!");
-    return false;
+
+    String resourceType = 'raw';
+    if (mediaType == 'image') {
+      resourceType = 'image';
+    } else if (mediaType == 'video') {
+      resourceType = 'video';
+    }
+
+    // Create upload request
+    var uri = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/$resourceType/upload');
+    var request = http.MultipartRequest('POST', uri);
+
+    var fileByte = await file.readAsBytes();
+    var multipartFile = http.MultipartFile.fromBytes(
+      'file',
+      fileByte,
+      filename: file.path.split('/').last,
+    );
+
+    request.files.add(multipartFile);
+    request.fields['upload_preset'] = "ml_default";
+
+    //send the request
+    var response = await request.send();
+    var responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(responseBody);
+      return {
+        'url': jsonResponse['secure_url'],
+        'public_id': jsonResponse['public_id'],
+        'type': mediaType,
+      };
+    }
+  } catch (e) {
+    print("Error uploading file: $e");
+    return null;
   }
-
-  File file = File(filePickerResult.files.single.path!);
-
-  String cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME'] ?? '';
-
-  // Create a MultipartRequest to upload the file
-  var uri = Uri.parse("https://api.cloudinary.com/v1_1/$cloudName/raw/upload");
-  var request = http.MultipartRequest("POST", uri);
-
-  // Read the file content as bytes
-  var fileBytes = await file.readAsBytes();
-
-  var multipartFile = http.MultipartFile.fromBytes(
-    'file', // The form field name for the file
-    fileBytes,
-    filename: file.path.split("/").last, //The file name to send in the request
-  );
-
-  // Add the file part to the request
-  request.files.add(multipartFile);
-
-  request.fields['upload_preset'] = "preset-for-file-upload";
-  request.fields['resource_type'] = "raw";
-
-  // Send the request and await the response
-  var response = await request.send();
-
-  // Get the response as text
-  var responseBody = await response.stream.bytesToString();
-
-  // Print the response
-  print(responseBody);
-
-  if (response.statusCode == 200) {
-    var jsonResponse = jsonDecode(responseBody);
-    Map<String, String> requiredData = {
-      "name": filePickerResult.files.first.name,
-      "id": jsonResponse["public_id"],
-      "extension": filePickerResult.files.first.extension!,
-      "size": jsonResponse["bytes"].toString(),
-      "url": jsonResponse["secure_url"],
-      "created_at": jsonResponse["created_at"],
-    };
-
-    await DbService().saveUploadedFilesData(requiredData);
-    print("Upload successful!");
-    return true;
-  } else {
-    print("Upload failed with status: ${response.statusCode}");
-    return false;
-  }
+  return null;
 }
 
 // delete specific file from cloudinary

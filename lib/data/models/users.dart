@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:tutorconnect/data/models/student.dart';
 import 'package:tutorconnect/data/models/tutor.dart';
 
@@ -13,6 +12,7 @@ class UserModel {
   final String? photoUrl;
   final String? bio;
   final String? address;
+  final String status;
   final StudentProfile? studentProfile;
   final TutorProfile? tutorProfile;
 
@@ -27,6 +27,7 @@ class UserModel {
     this.photoUrl,
     this.bio,
     this.address,
+    this.status = "offline",
     this.studentProfile,
     this.tutorProfile,
   });
@@ -43,6 +44,7 @@ class UserModel {
       "photoUrl": photoUrl ?? "",
       "bio": bio ?? "",
       "address": address ?? "",
+      "status": status,
       'studentProfile': studentProfile?.toJson(),
       'tutor_profile': tutorProfile?.toJson(),
     };
@@ -62,10 +64,11 @@ class UserModel {
       photoUrl: json['photoUrl'],
       bio: json['bio'],
       address: json['address'],
-      studentProfile: json['student_profile'] is Map<String, dynamic>
-          ? StudentProfile.fromJson(json['student_profile'])
+      status: json['status'] ?? 'offline',
+      studentProfile: json['studentProfile'] is Map<String, dynamic>
+          ? StudentProfile.fromJson(json['studentProfile'])
           : null,
-    tutorProfile: tutorProfileRaw is Map<String, dynamic>
+      tutorProfile: tutorProfileRaw is Map<String, dynamic>
           ? TutorProfile.fromJson(tutorProfileRaw)
           : null,
     );
@@ -74,7 +77,7 @@ class UserModel {
 
 extension UserModelCopyWith on UserModel {
   UserModel copyWith({
-    StudentProfile? studentProfile,
+    StudentProfile? studentProfile, required String status,
   }) {
     return UserModel(
       uid: uid,
@@ -87,6 +90,7 @@ extension UserModelCopyWith on UserModel {
       photoUrl: photoUrl,
       bio: bio,
       address: address,
+      status: status,
       studentProfile: studentProfile ?? this.studentProfile,
       tutorProfile: tutorProfile,
     );

@@ -72,7 +72,7 @@ class TutorProfileRepositoryImpl implements TutorProfileRepository {
         final updatedUser = currentUser.copyWith(
           studentProfile: currentUser.studentProfile?.copyWith(
             favorites: favorites,
-          ),
+          ), status: '',
         );
         await Account.instance.saveUser(updatedUser);
       }

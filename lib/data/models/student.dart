@@ -15,21 +15,31 @@ class StudentProfile {
 
   factory StudentProfile.fromJson(Map<String, dynamic> json) {
     return StudentProfile(
-      (json['posts'] as List).map((e) => Post.fromJson(e)).toList(),
-      (json['comments'] as List).map((e) => Comment.fromJson(e)).toList(),
-      List<String>.from(json['favorites']),
-      (json['learning_history'] as List).map((e) => SessionModel.fromJson(e)).toList(),
+      (json['posts'] as List?)
+          ?.map((e) => Post.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
+      (json['comments'] as List?)
+          ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
+      (json['favorites'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      (json['learning_history'] as List?)
+          ?.map((e) => SessionModel.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'favorites': favorites,
-      'learning_history': learningHistory.map((e) => e.toJson()).toList(),
+      'learningHistory': learningHistory.map((e) => e.toJson()).toList(),
       'posts': posts.map((e) => e.toJson()).toList(),
       'comments': comments.map((e) => e.toJson()).toList(),
     };
   }
+
 
   StudentProfile copyWith({
     List<String>? favorites,
