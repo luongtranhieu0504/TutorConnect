@@ -1,7 +1,5 @@
 
-
-import 'package:tutorconnect/data/models/reviews.dart';
-import 'package:tutorconnect/data/models/tutor.dart';
+import '../../../../domain/model/review.dart';
 
 abstract class TutorProfileState {}
 
@@ -9,7 +7,7 @@ class TutorProfileInitial extends TutorProfileState {}
 class TutorProfileLoading extends TutorProfileState {}
 
 class TutorProfileSuccess extends TutorProfileState {
-  final List<ReviewModel> reviews;
+  final List<Review> reviews;
   TutorProfileSuccess(this.reviews);
 }
 

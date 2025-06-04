@@ -1,6 +1,7 @@
 class Routes {
   static const String loginPage = '/login';
   static const String registerPage = '/register';
+  static const String updateUserPage = '/update-user';
   static const String mainPage = '/main';
   static const String studentHomePage = '/student_home';
   static const String tutorHomePage = '/tutor_home';
@@ -17,4 +18,6 @@ class Routes {
   static const String postDetailPage = '/post-detail';
   static const String postCommentPage = '/post-comment';
   static const String tutorProfilePage = '/tutor-profile';
+  static const String commentPage = '/comment';
+  static const String scheduleFormPage = '/schedule-form';
 }

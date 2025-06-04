@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tutorconnect/data/models/destination.dart';
+
+import 'destination.dart';
 
 class LayoutScaffold extends StatelessWidget {
   const LayoutScaffold({

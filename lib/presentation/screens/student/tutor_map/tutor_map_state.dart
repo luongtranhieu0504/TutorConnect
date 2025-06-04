@@ -1,12 +1,13 @@
 
-import '../../../../data/models/users.dart';
+
+import '../../../../domain/model/tutor.dart';
 
 abstract class TutorMapState {}
 class TutorMapInitial extends TutorMapState {}
 class TutorMapLoading extends TutorMapState {}
 class TutorMapSuccess extends TutorMapState {
 
-  final List<UserModel> tutors;
+  final List<Tutor> tutors;
   TutorMapSuccess(this.tutors);
 }
 

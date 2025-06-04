@@ -193,61 +193,59 @@ class _TutorHomeScreenState extends State<TutorHomeScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
       margin: const EdgeInsets.only(bottom: 8),
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: AssetImage('assets/images/ML1.png'),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    student,
-                    style: AppTextStyles(context).headingMedium.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: AssetImage('assets/images/ML1.png'),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  student,
+                  style: AppTextStyles(context).headingMedium.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
-                    subject,
-                    style: AppTextStyles(context).bodyText2.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    location,
-                    style: AppTextStyles(context).bodyText2.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              Spacer(),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  side: BorderSide(color: AppColors.primary),
                 ),
-                child: Text(
-                  "Nhắn tin",
+                Text(
+                  subject,
                   style: AppTextStyles(context).bodyText2.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                  )
+                  ),
                 ),
-                onPressed: () {},
+                Text(
+                  location,
+                  style: AppTextStyles(context).bodyText2.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                side: BorderSide(color: AppColors.primary),
               ),
-            ],
-          ),
+              child: Text(
+                "Nhắn tin",
+                style: AppTextStyles(context).bodyText2.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                )
+              ),
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
 

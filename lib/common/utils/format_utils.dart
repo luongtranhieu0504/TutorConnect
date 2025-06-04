@@ -1,6 +1,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../../domain/model/schedule_slot.dart';
 
 class FormatUtils {
   /// 👉 Chuyển `DateTime` thành chuỗi "dd/MM/yyyy"
@@ -11,6 +14,10 @@ class FormatUtils {
   /// 👉 Chuyển `DateTime` thành chuỗi giờ "HH:mm"
   static String formatTime(DateTime dateTime) {
     return DateFormat('HH:mm').format(dateTime);
+  }
+
+  static String formatTimeOfDay(TimeOfDay time) {
+    return "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
   }
 
   /// 👉 Lấy khoảng thời gian kết thúc dựa trên thời gian bắt đầu và thời lượng
@@ -41,6 +48,39 @@ class FormatUtils {
   static String formatTimeAgoWithTimeStamp(Timestamp timestamp) {
     final dateTime = timestamp.toDate();
     return formatTimeAgo(dateTime);
+  }
+
+  static String weekdayName(int weekday) {
+    const weekdays = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+    return weekdays[(weekday % 7)];
+  }
+
+  static DateTime calculateScheduleDateTime(DateTime startDate, ScheduleSlot slot) {
+    final dayMap = {
+      'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4,
+      'Friday': 5, 'Saturday': 6, 'Sunday': 7,
+      'Thứ 2': 1, 'Thứ 3': 2, 'Thứ 4': 3, 'Thứ 5': 4,
+      'Thứ 6': 5, 'Thứ 7': 6, 'Chủ nhật': 7,
+    };
+
+    final startDay = startDate.weekday;
+
+    int daysToAdd = slot.weekday! - startDay;
+    if (daysToAdd < 0) daysToAdd += 7;
+
+    final scheduleDate = startDate.add(Duration(days: daysToAdd));
+
+    final timeParts = slot.startTime;
+    final hour = timeParts?.hour;
+    final minute = timeParts?.minute;
+
+    return DateTime(
+      scheduleDate.year,
+      scheduleDate.month,
+      scheduleDate.day,
+      hour!,
+      minute!,
+    );
   }
 
 

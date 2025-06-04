@@ -6,12 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:tutorconnect/common/utils/format_address.dart';
 import 'package:tutorconnect/data/manager/account.dart';
-import 'package:tutorconnect/data/models/users.dart';
 import 'package:tutorconnect/di/di.dart';
 import 'package:tutorconnect/presentation/screens/student/tutor_map/tutor_map_bloc.dart';
 import 'package:tutorconnect/presentation/screens/student/tutor_map/tutor_map_state.dart';
 
 import '../../../../common/utils/convert_widget_image.dart';
+import '../../../../domain/model/tutor.dart';
 import 'marker_service.dart';
 
 class TutorMapScreen extends StatefulWidget {
@@ -60,7 +60,7 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
     );
   }
 
-  Widget _buildContent(List<UserModel> tutors) {
+  Widget _buildContent(List<Tutor> tutors) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tìm gia sư gần bạn'),
@@ -158,7 +158,7 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
   }
 
 
-  Future<void> _loadMarkers(List<UserModel> tutors, {String? subject, required double distance}) async {
+  Future<void> _loadMarkers(List<Tutor> tutors, {String? subject, required double distance}) async {
     if (mapboxMap == null) return;
     await markerService.clear();
 
@@ -172,7 +172,7 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
     }
 
     for (var tutor in tutors) {
-      final latLng = await AddressFormatter().formatAddressToLatLng(tutor.address ?? '');
+      final latLng = await AddressFormatter().formatAddressToLatLng(tutor.user.address ?? '');
       if (latLng == null || myLatLng == null) continue;
 
       final distanceInKm = AddressFormatter().calculateDistanceInKm(
@@ -183,7 +183,7 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
       );
 
       final hasSubject = subject != null && subject.isNotEmpty;
-      final matchSubject = tutor.tutorProfile?.subjects.contains(subject) ?? false;
+      final matchSubject = tutor.subjects.contains(subject);
       final matchDistance = distanceInKm <= distance;
 
       if (hasSubject) {
@@ -191,7 +191,7 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
       } else {
         if (!matchDistance) continue;
       }
-      final imageBytes = await _renderMarkerWidget("assets/images/ML1.png", size: 60);
+      final imageBytes = await _renderMarkerWidget(tutor.user.photoUrl!, size: 60);
       if (imageBytes != null) {
         await markerService.addTutorMarker(
           location: latLng,
@@ -219,7 +219,7 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
         ),
         // Avatar with error handling
         ClipOval(
-          child: Image.asset(
+          child: Image.network(
             avatarUrl,
             width: size - 10,
             height: size - 10,

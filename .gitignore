@@ -1,3 +1,9 @@
+# Security and environment files
+.env
+.env.*
+*.key
+secrets.json
+
 # Miscellaneous
 *.class
 *.log

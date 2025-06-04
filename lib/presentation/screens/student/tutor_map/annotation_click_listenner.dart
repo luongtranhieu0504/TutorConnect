@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:tutorconnect/domain/model/tutor.dart';
 import 'package:tutorconnect/presentation/widgets/tutor_bottom_sheet.dart';
-
-import '../../../../data/models/users.dart';
+import '../../../../domain/model/user.dart';
 
 class TutorAnnotationClickListener extends OnPointAnnotationClickListener {
   final BuildContext context;
-  final Map<String, UserModel> annotationTutorMap;
+  final Map<String, Tutor> annotationTutorMap;
 
   TutorAnnotationClickListener(this.context, this.annotationTutorMap);
   @override
@@ -20,7 +20,7 @@ class TutorAnnotationClickListener extends OnPointAnnotationClickListener {
     }
     return true;
   }
-  void _showBottomSheet(UserModel tutor) {
+  void _showBottomSheet(Tutor tutor) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

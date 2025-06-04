@@ -2,14 +2,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:tutorconnect/data/models/users.dart';
 
+import '../../../../domain/model/tutor.dart';
+import '../../../../domain/model/user.dart';
 import 'annotation_click_listenner.dart';
 
 class MarkerService {
   final MapboxMap map;
   final BuildContext context;
-  final Map<String, UserModel> _annotationTutorMap = {};
+  final Map<String, Tutor> _annotationTutorMap = {};
 
   PointAnnotationManager? _manager;
 
@@ -42,7 +43,7 @@ class MarkerService {
   Future<void> addTutorMarker({
     required LatLng location,
     required Uint8List imageBytes,
-    required UserModel tutor,
+    required Tutor tutor,
   }) async {
     if (_manager == null) return;
 
@@ -57,8 +58,8 @@ class MarkerService {
     final annotation = await _manager!.create(annotationOptions);
     _annotationTutorMap[annotation.id] = tutor;
 
-    debugPrint("✅ Added marker for tutor: ${tutor.name}, annotationId: ${annotation.id}");
+    debugPrint("✅ Added marker for tutor: ${tutor.user.name}, annotationId: ${annotation.id}");
   }
 
-  UserModel? getTutorByAnnotationId(String id) => _annotationTutorMap[id];
+  Tutor? getTutorByAnnotationId(String id) => _annotationTutorMap[id];
 }

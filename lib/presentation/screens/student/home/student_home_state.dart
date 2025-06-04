@@ -1,17 +1,20 @@
-import '../../../../data/models/users.dart';
+
+import 'package:tutorconnect/domain/model/student.dart';
+
+import '../../../../domain/model/user.dart';
 
 abstract class StudentHomeState {}
 
-class UserInitial extends StudentHomeState {}
+class Initial extends StudentHomeState {}
 
-class UserLoading extends StudentHomeState {}
+class Loading extends StudentHomeState {}
 
-class UserSuccess extends StudentHomeState {
-  final UserModel user;
-  UserSuccess(this.user);
+class Success extends StudentHomeState {
+  final Student student;
+  Success(this.student);
 }
 
-class UserFailure extends StudentHomeState {
+class Failure extends StudentHomeState {
   final String message;
-  UserFailure(this.message);
+  Failure(this.message);
 }

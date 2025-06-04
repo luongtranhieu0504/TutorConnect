@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tutorconnect/data/models/post.dart';
-import 'package:tutorconnect/presentation/navigation/layout_scaffold.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
-import 'package:tutorconnect/presentation/screens/comment/comment_screen.dart';
-import 'package:tutorconnect/presentation/screens/history_session/history_session_screen.dart';
-import 'package:tutorconnect/presentation/screens/post/post_screen.dart';
-import 'package:tutorconnect/presentation/screens/scheduall/scheduall_screen.dart';
+import 'package:tutorconnect/presentation/screens/login/update_user_screen.dart';
+import 'package:tutorconnect/presentation/screens/student/home/student_home_screen.dart';
+import 'package:tutorconnect/presentation/screens/tutor/tutor_home/tutor_home_screen.dart';
 
-import '../../data/models/users.dart';
-import '../screens/chat/chat_screen.dart';
+import '../../domain/model/tutor.dart';
 import '../screens/login/login_screen.dart';
 import '../screens/login/register_screen.dart';
-import '../screens/message/message_screen.dart';
-import '../screens/profile/profile_screen.dart';
-import '../screens/student/home/student_home_screen.dart';
 import '../screens/student/tutor_map/tutor_map_screen.dart';
-import '../screens/tutor/tutor_home/tutor_home_screen.dart';
 import '../screens/tutor/tutor_profile/tutor_profile_screen.dart';
+import 'layout_scaffold.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
@@ -37,52 +30,51 @@ final router = GoRouter(
               path: Routes.mainPage,
               builder: (context, state) {
                 // Lấy thông tin người dùng từ state
-                final data = state.extra as Map<String, String>?;
+                final data = state.extra as Map<String, dynamic>?;
                 final role = data?['role'];
-                final uid = data?['uid'];
-                if (role == 'Gia sư') {
-                  return const TutorHomeScreen();
-                } else if (role == 'Học sinh') {
-                  return StudentHomeScreen(uid: uid!);
+                if (role == 'Tutor') {
+                  return TutorHomeScreen();
+                } else if (role == 'Student') {
+                  return StudentHomeScreen();
                 } else {
-                  return const LoginScreen(); // Fallback in case of invalid role
+                  return LoginScreen();
                 }
               },
             ),
           ],
         ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.postPage,
-              builder: (context, state) => const PostScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.schedulePage,
-              builder: (context, state) => const ScheduleScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.messagePage,
-              builder: (context, state) => const MessageScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: Routes.profilePage,
-              builder: (context, state) => const ProfileScreen(),
-            ),
-          ],
-        ),
+        // StatefulShellBranch(
+        //   routes: [
+        //     GoRoute(
+        //       path: Routes.postPage,
+        //       builder: (context, state) => const PostScreen(),
+        //     ),
+        //   ],
+        // ),
+        // StatefulShellBranch(
+        //   routes: [
+        //     GoRoute(
+        //       path: Routes.schedulePage,
+        //       builder: (context, state) => const ScheduleScreen(),
+        //     ),
+        //   ],
+        // ),
+        // StatefulShellBranch(
+        //   routes: [
+        //     GoRoute(
+        //       path: Routes.messagePage,
+        //       builder: (context, state) => const MessageScreen(),
+        //     ),
+        //   ],
+        // ),
+        // StatefulShellBranch(
+        //   routes: [
+        //     GoRoute(
+        //       path: Routes.profilePage,
+        //       builder: (context, state) => const ProfileScreen(),
+        //     ),
+        //   ],
+        // ),
       ],
     ),
     // Các màn hình ngoài BottomNavigationBar
@@ -94,51 +86,56 @@ final router = GoRouter(
       path: Routes.registerPage,
       builder: (context, state) => const RegisterScreen(),
     ),
-    // Màn hình Chat phải nằm ngoài StatefulShellRoute để mở đúng
     GoRoute(
-      path: Routes.chatPage,
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) {
-        final extra = state.extra as Map<String, dynamic>;
-        final user = extra['user'] as UserModel;
-        final conversationId = extra['conversationId'] as String;
-        return ChatScreen(
-          conversationId,
-          user : user,
-        );
-      },
+      path: Routes.updateUserPage,
+      builder: (context, state) => const UpdateUserScreen(),
     ),
 
-    GoRoute(
-      path: Routes.historySessionPage,
-      builder: (context, state) => const HistorySessionScreen(),
-    ),
+    // Màn hình Chat phải nằm ngoài StatefulShellRoute để mở đúng
     // GoRoute(
-    //   path: Routes.resetPasswordPage,
-    //   builder: (context, state) => const LoginScreen(),
+    //   path: Routes.chatPage,
+    //   parentNavigatorKey: _rootNavigatorKey,
+    //   builder: (context, state) {
+    //     final extra = state.extra as Map<String, dynamic>;
+    //     final user = extra['user'] as UserModel;
+    //     final conversationId = extra['conversationId'] as String;
+    //     return ChatScreen(
+    //       conversationId,
+    //       user : user,
+    //     );
+    //   },
     // ),
+    //
     // GoRoute(
-    //   path: Routes.tutorDetailPage,
-    //   builder: (context, state) => const LoginScreen(),
+    //   path: Routes.historySessionPage,
+    //   builder: (context, state) => const HistorySessionScreen(),
     // ),
+    // // GoRoute(
+    // //   path: Routes.resetPasswordPage,
+    // //   builder: (context, state) => const LoginScreen(),
+    // // ),
+    // // GoRoute(
+    // //   path: Routes.tutorDetailPage,
+    // //   builder: (context, state) => const LoginScreen(),
+    // // ),
     GoRoute(
       path: Routes.tutorMapPage,
       builder: (context, state) {
         return TutorMapScreen();
       },
     ),
-    GoRoute(
-      path: Routes.postCommentPage,
-      builder: (context, state) {
-        final post = state.extra as Post;
-        return CommentScreen(post: post);
-      },
-    ),
+    // GoRoute(
+    //   path: Routes.postCommentPage,
+    //   builder: (context, state) {
+    //     final post = state.extra as Post;
+    //     return CommentScreen(post: post);
+    //   },
+    // ),
     GoRoute(
       path: Routes.tutorProfilePage,
       builder: (context, state) {
         final extra = state.extra as Map<String, dynamic>;
-        final tutor = extra['tutor'] as UserModel;
+        final tutor = extra['tutor'] as Tutor;
         final isCurrentUser = extra['isCurrentUser'] as bool;
         return TutorProfileScreen(
           tutor: tutor,
@@ -146,8 +143,17 @@ final router = GoRouter(
         );
       }
     ),
-
-
-
+    // GoRoute(
+    //   path: Routes.scheduleFormPage,
+    //   builder: (context , state) {
+    //     final extra = state.extra as Map<String, dynamic>;
+    //     final student = extra['student'] as UserModel;
+    //     final scheduleId = extra['scheduleId'] as String;
+    //     return ScheduleFormScreen(
+    //       student: student,
+    //       scheduleId: scheduleId,
+    //     );
+    //   },
+    // )
   ],
 );

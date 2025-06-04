@@ -8,6 +8,7 @@ import 'package:tutorconnect/presentation/widgets/email_text_field.dart';
 import 'package:tutorconnect/presentation/widgets/or_divider.dart';
 import 'package:tutorconnect/presentation/widgets/password_text_field.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
+import '../../../data/manager/account.dart';
 import '../../../theme/text_styles.dart';
 import 'login_bloc.dart';
 
@@ -23,6 +24,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool rememberMe = false;
+  final user = Account.instance.user;
+  String? typeRole;
+
 
   @override
   void initState() {
@@ -38,10 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
           );
         },
         success: (data) {
-          context.go(
-            Routes.mainPage,
-            extra: data,
-          );
+          if (user.photoUrl == null || user.address == null) {
+            context.go(Routes.updateUserPage);
+          } else {
+            context.push(Routes.mainPage, extra: {
+              'role': user.typeRole,
+            });
+          }
         },
         failure: (message) {
           Navigator.pop(context);
@@ -180,7 +187,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     color: AppColors.colorButton,
                     textColor: Colors.white,
                     onPressed: () {
-                      bloc.resetPassword(emailController.text);
+                      // bloc.resetPassword(emailController.text);
                     },
                   )
                 ]

@@ -6,8 +6,4 @@ import 'package:tutorconnect/di/di.config.dart';
 
 final getIt = GetIt.instance;
 @injectableInit
-void configureDependencies() {
-  getIt.init();
-  // Register your dependencies here
-  getIt.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
-}
+void configureDependencies() => getIt.init();

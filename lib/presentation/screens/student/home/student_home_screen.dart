@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tutorconnect/data/models/users.dart';
+import 'package:tutorconnect/domain/model/student.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/screens/student/home/student_home_bloc.dart';
 import 'package:tutorconnect/presentation/screens/student/home/student_home_state.dart';
@@ -12,11 +12,11 @@ import 'package:tutorconnect/theme/color_platte.dart';
 import 'package:tutorconnect/theme/theme_ultils.dart';
 
 import '../../../../di/di.dart';
+import '../../../../domain/model/user.dart';
 import '../../../../theme/text_styles.dart';
 
 class StudentHomeScreen extends StatefulWidget {
-  final String uid;
-  const StudentHomeScreen({super.key, required this.uid});
+  const StudentHomeScreen({super.key});
 
   @override
   State<StudentHomeScreen> createState() => _HomeScreenState();
@@ -31,7 +31,7 @@ class _HomeScreenState extends State<StudentHomeScreen> {
   @override
   initState() {
     super.initState();
-    _bloc.getData(widget.uid);
+    _bloc.getCurrentStudent();
   }
 
   @override
@@ -39,12 +39,12 @@ class _HomeScreenState extends State<StudentHomeScreen> {
     return Scaffold(
       body: BlocBuilder<StudentHomeBloc, StudentHomeState>(
         builder: (context, state) {
-          if (state is UserLoading) {
+          if (state is Loading) {
             return Center(child: CircularProgressIndicator());
-          } else if (state is UserSuccess) {
-            final user = (state).user;
-            return _uiContent(user);
-          } else if (state is UserFailure) {
+          } else if (state is Success) {
+            final student = (state).student;
+            return _uiContent(student);
+          } else if (state is Failure) {
             return Center(child: Text(state.message));
           }
           return Center(child: Text("Unknown state"));
@@ -54,11 +54,11 @@ class _HomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
-  Widget _uiContent(UserModel user) {
+  Widget _uiContent(Student student) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 100), 
-            child: _appBar(user),
+            preferredSize: Size(double.infinity, 100),
+            child: _appBar(student),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<StudentHomeScreen> {
                     onTap: () {
                       context.push(
                         Routes.tutorMapPage,
-                        extra: user
+                        extra: student
                       );
                     },
                     child: Container(
@@ -207,58 +207,56 @@ class _HomeScreenState extends State<StudentHomeScreen> {
               )),
         ));
   }
-  
-  Widget _appBar(UserModel user) {
+
+  Widget _appBar(Student student) {
     return SafeArea(
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(user.photoUrl ?? ''),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Xin chào học sinh !',
-                        style: AppTextStyles(context).headingSemiBold.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(student.user.photoUrl ?? ''),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Xin chào học sinh !',
+                      style: AppTextStyles(context).headingSemiBold.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(
-                        user.name ?? '',
-                        style: AppTextStyles(context).headingMedium.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    ),
+                    Text(
+                      student.user.name ?? '',
+                      style: AppTextStyles(context).headingMedium.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.notifications),
-                onPressed: () {
-                  // Handle notification button press
-                },
-              )
-            ],
-          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: () {
+                // Handle notification button press
+              },
+            )
+          ],
         ),
       )
     );
   }
-  
+
 
   Widget _subjectCard(
       String title, String iconPath, Color color, int tutorCount) {

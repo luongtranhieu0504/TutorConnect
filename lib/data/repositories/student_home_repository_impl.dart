@@ -1,66 +1,69 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
-import 'package:tutorconnect/data/manager/account.dart';
+import 'package:tutorconnect/data/mapper/student_mapper.dart';
 import '../../common/task_result.dart';
+import '../../domain/model/student.dart';
 import '../../domain/repository/student_home_repository.dart';
-import '../models/users.dart';
+import '../manager/account.dart';
+import '../network/api_call.dart';
+import '../source/student_network_data_source.dart';
 
-@Injectable(as: StudentHomeRepository)
+@Singleton(as: StudentHomeRepository)
 class StudentHomeRepositoryImpl implements StudentHomeRepository {
-  final FirebaseFirestore _firestore;
+  final StudentNetworkDataSource _dataSource;
 
-  StudentHomeRepositoryImpl(this._firestore);
-
-  @override
-  Future<TaskResult<UserModel?>> getStudentById(String studentId) async {
-    try {
-      final doc = await _firestore.collection('users').doc(studentId).get();
-      if (!doc.exists) return TaskResult.failure('Student not found');
-
-      final data = doc.data()!;
-      final user = UserModel.fromJson({...data, 'uid': studentId});
-
-      // ✅ Save to AppSession
-      await Account.instance.saveUser(user);
-
-      return TaskResult.success(user);
-    } catch (e) {
-      return TaskResult.failure("Error fetching student: $e");
-    }
-  }
+  StudentHomeRepositoryImpl(this._dataSource);
 
   @override
-  Future<TaskResult<bool>> updateStudentHomeData(String studentId, Map<String, dynamic> data) async {
-    try {
-      await _firestore.collection('users').doc(studentId).set(data, SetOptions(merge: true));
-
-      // ✅ Nếu là user hiện tại → update luôn local
-      if (Account.instance.user.uid == studentId) {
-        final updated = {...Account.instance.user.toJson(), ...data};
-        final updatedUser = UserModel.fromJson(updated);
-        await Account.instance.saveUser(updatedUser);
-      }
-
-      return TaskResult.success(true);
-    } catch (e) {
-      return TaskResult.failure("Error updating student: $e");
-    }
-  }
+  Future<TaskResult<Student?>> getStudentById(int id) =>
+      callApi(() async {
+        final response = await _dataSource.getStudentById(id);
+        return response.data!.toModel();
+      });
 
   @override
-  Future<TaskResult<bool>> deleteStudentHomeData(String studentId) async {
-    try {
-      await _firestore.collection('users').doc(studentId).delete();
+  Future<TaskResult<Student?>> updateStudent(int id, Map<String, dynamic> data)  =>
+      callApi(() async {
+        final response = await _dataSource.updateStudent(id, data);
+        return response.data!.toModel();
+      });
 
-      // ✅ Nếu là user hiện tại → xoá local luôn
-      if (Account.instance.user.uid == studentId) {
-        await Account.instance.signOut();
-      }
+  @override
+  Future<TaskResult<Student>> updateFavoriteTutors({required int studentId, required List<int> favoriteTutorId}) =>
+      callApi(() async {
+        final response = await _dataSource.updateFavoriteTutors(studentId, favoriteTutorId);
+        final student = response.data!.toModel();
 
-      return TaskResult.success(true);
-    } catch (e) {
-      return TaskResult.failure("Error deleting student: $e");
-    }
-  }
+        // Update cache if needed
+        if (Account.instance.student?.id == studentId) {
+          Account.instance.saveStudent(student);
+        }
+        return student;
+      });
+
+  @override
+  Future<TaskResult<Student?>> getCurrentStudent() =>
+      callApi(() async {
+        // If we already have student data cached, return it
+        if (Account.instance.student != null) {
+          return Account.instance.student;
+        }
+
+        // Otherwise fetch from network
+        final response = await _dataSource.getCurrentStudent();
+        final student = response.data!.toModel();
+
+        // Cache the student data
+        Account.instance.saveStudent(student);
+
+        return student;
+      });
+
+  Future<TaskResult<Student?>> refreshCurrentStudent() =>
+      callApi(() async {
+        final response = await _dataSource.getCurrentStudent();
+        final student = response.data!.toModel();
+        Account.instance.saveStudent(student);
+        return student;
+      });
+
 }

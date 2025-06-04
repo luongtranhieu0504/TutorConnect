@@ -2,83 +2,92 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tutorconnect/common/stream_wrapper.dart';
-import 'package:tutorconnect/domain/repository/tutor_profile_repository.dart';
+import 'package:tutorconnect/domain/repository/review_repository.dart';
+import 'package:tutorconnect/domain/repository/student_home_repository.dart';
 import 'package:tutorconnect/presentation/screens/tutor/tutor_profile/tutor_profile_state.dart';
-
 import '../../../../common/async_state.dart';
 import '../../../../data/manager/account.dart';
-import '../../../../data/models/reviews.dart';
-import '../../../../domain/repository/chat_repositpry.dart';
+import '../../../../domain/model/review.dart';
+
 
 @injectable
 class TutorProfileBloc extends Cubit<TutorProfileState> {
-  final TutorProfileRepository _tutorProfileRepository;
-  final ChatRepository _chatRepository;
+  final ReviewRepository _reviewRepository;
+  final StudentHomeRepository _studentHomeRepository;
+  // final ChatRepository _chatRepository;
 
   final addBroadcast = StreamWrapper<AsyncState<void>>(broadcast: true);
   final addFavoriteBroadcast = StreamWrapper<AsyncState<void>>(broadcast: true);
   final openChatBroadcast = StreamWrapper<AsyncState<String>>(broadcast: true);
-  TutorProfileBloc(this._tutorProfileRepository, this._chatRepository) : super(TutorProfileInitial());
+  TutorProfileBloc(this._reviewRepository, this._studentHomeRepository) : super(TutorProfileInitial());
 
-  void getTutorProfile(String uid) async {
+  void getReviews(int tutorId) async {
     emit(TutorProfileLoading());
-    final result = await _tutorProfileRepository.getReviews(uid);
+    final result = await _reviewRepository.getReviewsList(tutorId);
     result.when(
       success: (reviews) => emit(TutorProfileSuccess(reviews)),
       failure: (message) => emit(TutorProfileFailure(message)),
     );
   }
 
-  void addReview ({
-    required String tutorId,
-    required String studentId,
-    required String studentName,
-    required double rating,
-    required String comment,
-  }) async {
+  void addReview (
+    int tutorId,
+    int studentId,
+    String studentName,
+    int rating,
+    String comment,
+  ) async {
     addBroadcast.add(AsyncState.loading());
-    final review = ReviewModel(
-      id: '',
-      tutorId: tutorId,
-      studentId: studentId,
-      studentName: studentName,
-      rating: rating.toInt(),
-      comment: comment,
-      date: DateTime.now(),
+    final review = Review(
+      0,
+      rating,
+      comment,
+      DateTime.now(),
+      studentId,
+      tutorId,
+      studentName,
     );
-    final result = await _tutorProfileRepository.addReview(review);
+    final result = await _reviewRepository.addReview(review);
     result.when(
       success: (_) => addBroadcast.add(AsyncState.success(null)),
       failure: (message) => addBroadcast.add(AsyncState.failure(message)),
     );
   }
 
-  Future<void> openOrCreateChat(String tutorId) async {
-    openChatBroadcast.add(AsyncState.loading());
-
-    final result = await _chatRepository.createOrGetConversation(
-      userId1: Account.instance.user.uid,
-      userId2: tutorId,
-    );
+  void deleteReview(int reviewId) async {
+    addBroadcast.add(AsyncState.loading());
+    final result = await _reviewRepository.deleteReview(reviewId);
     result.when(
-      success: (conversationId) {
-        openChatBroadcast.add(AsyncState.success(conversationId));
-      },
-      failure: (message) {
-        openChatBroadcast.add(AsyncState.failure(message));
-      },
+      success: (_) => addBroadcast.add(AsyncState.success(null)),
+      failure: (message) => addBroadcast.add(AsyncState.failure(message)),
     );
   }
 
+  // Future<void> openOrCreateChat(String tutorId) async {
+  //   openChatBroadcast.add(AsyncState.loading());
+  //
+  //   final result = await _chatRepository.createOrGetConversation(
+  //     userId1: Account.instance.user.uid,
+  //     userId2: tutorId,
+  //   );
+  //   result.when(
+  //     success: (conversationId) {
+  //       openChatBroadcast.add(AsyncState.success(conversationId));
+  //     },
+  //     failure: (message) {
+  //       openChatBroadcast.add(AsyncState.failure(message));
+  //     },
+  //   );
+  // }
 
   void addFavoriteTutor({
-    required String studentId,
-    required String tutorId,
+    required int studentId,
+    required List<int> tutorId,
   }) async {
     addFavoriteBroadcast.add(AsyncState.loading());
-    final result = await _tutorProfileRepository.addFavoriteTutor(
+    final result = await _studentHomeRepository.updateFavoriteTutors(
       studentId: studentId,
-      tutorId: tutorId,
+      favoriteTutorId: tutorId,
     );
     result.when(
       success: (_) => addFavoriteBroadcast.add(AsyncState.success(null)),
