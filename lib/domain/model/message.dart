@@ -11,9 +11,9 @@ part 'message.g.dart';
 class Message with _$Message {
   const factory Message(
       int id,
-      User sender,
-      User receiver,
-      Conversation conversation,
+      User? sender,
+      User? receiver,
+      Conversation? conversation,
 
       String? content,
       String? type,

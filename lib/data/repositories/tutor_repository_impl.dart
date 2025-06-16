@@ -6,6 +6,7 @@ import 'package:tutorconnect/data/mapper/tutor_mapper.dart';
 import '../../common/task_result.dart';
 import '../../domain/model/tutor.dart';
 import '../../domain/repository/tutor_repository.dart';
+import '../manager/account.dart';
 import '../network/api_call.dart';
 import '../network/dto/tutor_dto.dart';
 import '../source/tutor_network_data_source.dart';
@@ -20,14 +21,30 @@ class TutorRepositoryImpl implements TutorRepository {
   Future<TaskResult<Tutor?>> updateTutor(int id, Map<String, dynamic> data) =>
       callApi(() async {
         final response = await _dataSource.updateTutor(id, data);
-        return response.data!.toModel();
+        final tutor = response.data!.toModel();
+
+        if(Account.instance.tutor?.id == id) {
+          // Update cache if needed
+          Account.instance.saveTutor(tutor);
+        }
+        return tutor;
       });
 
   @override
   Future<TaskResult<Tutor?>> getCurrentTutor() =>
       callApi(() async {
+        if (Account.instance.tutor != null) {
+          return Account.instance.tutor;
+        }
+
+        // Otherwise fetch from network
         final response = await _dataSource.getCurrentTutor();
-        return response.data!.toModel();
+        final tutor = response.data!.toModel();
+
+        // Cache the student data
+        Account.instance.saveTutor(tutor);
+
+        return tutor;
       });
 
   @override

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorconnect/di/di.dart';
+import 'package:tutorconnect/presentation/screens/tutor/tutor_home/tutor_home_bloc.dart';
+import 'package:tutorconnect/presentation/screens/tutor/tutor_home/tutor_home_state.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
 import 'package:tutorconnect/theme/text_styles.dart';
+
+import '../../../../domain/model/tutor.dart';
 
 class TutorHomeScreen extends StatefulWidget {
   const TutorHomeScreen({super.key});
@@ -10,12 +16,35 @@ class TutorHomeScreen extends StatefulWidget {
 }
 
 class _TutorHomeScreenState extends State<TutorHomeScreen> {
+  final _bloc = getIt<TutorHomeBloc>();
+
   @override
-  Widget build(BuildContext context) {
-    return _buildContent();
+  initState() {
+    super.initState();
+    _bloc.getCurrentTutor();
   }
 
-  Widget _buildContent() {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<TutorHomeBloc, TutorHomeState>(
+        builder: (context, state) {
+          if (state is Loading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is Success) {
+            final tutor = (state).tutor;
+            return _buildContent(tutor);
+          } else if (state is Failure) {
+            return Center(child: Text(state.message));
+          }
+          return Center(child: Text("Unknown state"));
+        },
+        bloc: _bloc,
+      ),
+    );
+  }
+
+  Widget _buildContent(Tutor tutor) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -29,21 +58,21 @@ class _TutorHomeScreenState extends State<TutorHomeScreen> {
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: AssetImage('assets/images/ML1.png'),
+                      backgroundImage: NetworkImage(tutor.user.photoUrl!),
                     ),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Xin chào gia sư, Nguyễn Văn A',
+                          'Xin chào gia sư ${tutor.user.name}',
                           style: AppTextStyles(context).headingMedium.copyWith(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
-                          '⭐ 4.8 from 36 review',
+                          '⭐ ${tutor.rating} from 36 review',
                           style: AppTextStyles(context).bodyText2.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

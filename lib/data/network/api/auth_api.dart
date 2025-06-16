@@ -26,5 +26,17 @@ abstract class AuthApi {
   @PUT('/api/users/{id}')
   Future<ResponseDto<UserDto>> updateUser(@Path("id") int id, @Body() UpdateUserReqDto dto);
 
+  @PUT('/api/users/{id}')
+  Future<ResponseDto<UserDto>> updateUserStatus(
+      @Path('id') int userId,
+      @Body() Map<String, dynamic> data
+      );
+
+  @GET('/api/users/{id}')
+  Future<ResponseDto<UserDto>> getUserById(@Path('id') int id);
+
+  @POST('/api/user/save-fcm-token')
+  Future<void> saveFcmToken(@Body() Map<String, dynamic> body);
+
 
 }

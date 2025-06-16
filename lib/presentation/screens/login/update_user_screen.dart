@@ -139,8 +139,6 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
       }
       _bloc.updateUser(
         id: user.id,
-        username: user.username,
-        email: user.email,
         phoneNumber: _phoneController.text,
         name: _nameController.text,
         address: _addressController.text,

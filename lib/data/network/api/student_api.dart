@@ -14,8 +14,9 @@ abstract class StudentApi {
   // Get student by ID
   @GET('/api/students/{id}')
   Future<ResponseDto<StudentDto>> getStudentById(
-    @Path('id') int id,
-  );
+      @Path('id') int id,
+      @Query('populate') String populate,);
+
 
   @GET('/api/students/me')
   Future<ResponseDto<StudentDto>> getCurrentStudent();

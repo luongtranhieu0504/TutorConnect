@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import '../manager/account.dart';
 import '../network/api/auth_api.dart';
 import '../network/dto/login_req_dto.dart';
 import '../network/dto/login_res_dto.dart';
@@ -27,5 +28,15 @@ class AuthNetworkDataSource {
       UpdateUserReqDto updateUserReqDto,
       ) =>
       _authApi.updateUser(id, updateUserReqDto);
+
+
+  Future<ResponseDto<UserDto>> updateUserStatus(int userId, Map<String, dynamic> data) =>
+      _authApi.updateUserStatus(userId, data);
+
+  Future<ResponseDto<UserDto>> getUserById(int id) =>
+      _authApi.getUserById(id);
+
+
+
 
 }

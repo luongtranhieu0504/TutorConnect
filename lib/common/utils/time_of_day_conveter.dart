@@ -1,21 +1,21 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/material.dart';
 
-class TimeOfDayConverter implements JsonConverter<TimeOfDay?, Map<String, int?>?> {
+class TimeOfDayConverter implements JsonConverter<TimeOfDay?, String?> {
   const TimeOfDayConverter();
 
   @override
-  TimeOfDay? fromJson(Map<String, int?>? json) {
+  TimeOfDay? fromJson(String? json) {
     if (json == null) return null;
-    return TimeOfDay(hour: json['hour'] ?? 0, minute: json['minute'] ?? 0);
+    final parts = json.split(":");
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
   }
 
   @override
-  Map<String, int?>? toJson(TimeOfDay? time) {
+  String? toJson(TimeOfDay? time) {
     if (time == null) return null;
-    return {
-      'hour': time.hour,
-      'minute': time.minute,
-    };
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return "$hour:$minute:00.000"; // Add seconds and milliseconds
   }
 }

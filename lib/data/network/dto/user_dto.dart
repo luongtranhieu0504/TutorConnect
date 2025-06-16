@@ -17,6 +17,7 @@ class UserDto with _$UserDto {
     @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'username') String? username,
     @JsonKey(name: 'email') String? email,
+    @JsonKey(name: 'fcmToken') String? fcmToken,
     @JsonKey(name: 'role') RoleDto? role,
     @JsonKey(name: 'name') String? name,
     @JsonKey(name: 'school') String? school,

@@ -13,6 +13,7 @@ extension UserDtoExtension on UserDto {
       id ?? 0,
       username,
       email,
+      fcmToken,
       role?.toModel(),
       name,
       school,

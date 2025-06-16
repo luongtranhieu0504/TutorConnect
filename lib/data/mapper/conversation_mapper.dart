@@ -1,4 +1,5 @@
 import 'package:tutorconnect/data/mapper/message_mapper.dart';
+import 'package:tutorconnect/data/mapper/orher_user_mapper.dart';
 import 'package:tutorconnect/data/mapper/student_mapper.dart';
 import 'package:tutorconnect/data/mapper/tutor_mapper.dart';
 
@@ -14,6 +15,7 @@ extension ConversationDtoExtension on ConversationDto {
       student ?? 0,
       tutor ?? 0,
       messages?.map((e) => e.toModel()).toList() ?? [],
+      otherUser?.toModel(),
     );
   }
 }

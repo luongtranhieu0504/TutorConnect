@@ -9,7 +9,7 @@ class StudentNetworkDataSource {
 
   StudentNetworkDataSource(this._studentApi);
 
-  Future<ResponseDto<StudentDto>> getStudentById(int id) => _studentApi.getStudentById(id);
+  Future<ResponseDto<StudentDto>> getStudentById(int id) => _studentApi.getStudentById(id, 'user');
 
   Future<ResponseDto<StudentDto>> getCurrentStudent() => _studentApi.getCurrentStudent();
 

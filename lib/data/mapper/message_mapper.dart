@@ -8,10 +8,9 @@ extension MessageDtoExtension on MessageDto {
   Message toModel() {
     return Message(
       id ?? 0,
-      sender!.toModel(),
-      receiver!.toModel(),
-      conversation!.toModel(),
-
+      sender?.toModel(),
+      receiver?.toModel(),
+      conversation?.toModel(),
       content,
       type,
       timestamp,

@@ -2,6 +2,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tutorconnect/common/stream_wrapper.dart';
+import 'package:tutorconnect/domain/model/conversation.dart';
+import 'package:tutorconnect/domain/repository/conversation_repository.dart';
 import 'package:tutorconnect/domain/repository/review_repository.dart';
 import 'package:tutorconnect/domain/repository/student_home_repository.dart';
 import 'package:tutorconnect/presentation/screens/tutor/tutor_profile/tutor_profile_state.dart';
@@ -14,12 +16,14 @@ import '../../../../domain/model/review.dart';
 class TutorProfileBloc extends Cubit<TutorProfileState> {
   final ReviewRepository _reviewRepository;
   final StudentHomeRepository _studentHomeRepository;
-  // final ChatRepository _chatRepository;
+
+  final ConversationRepository _conversationRepository;
+
 
   final addBroadcast = StreamWrapper<AsyncState<void>>(broadcast: true);
   final addFavoriteBroadcast = StreamWrapper<AsyncState<void>>(broadcast: true);
-  final openChatBroadcast = StreamWrapper<AsyncState<String>>(broadcast: true);
-  TutorProfileBloc(this._reviewRepository, this._studentHomeRepository) : super(TutorProfileInitial());
+  final openChatBroadcast = StreamWrapper<AsyncState<Conversation>>(broadcast: true);
+  TutorProfileBloc(this._reviewRepository, this._studentHomeRepository, this._conversationRepository) : super(TutorProfileInitial());
 
   void getReviews(int tutorId) async {
     emit(TutorProfileLoading());
@@ -63,22 +67,22 @@ class TutorProfileBloc extends Cubit<TutorProfileState> {
     );
   }
 
-  // Future<void> openOrCreateChat(String tutorId) async {
-  //   openChatBroadcast.add(AsyncState.loading());
-  //
-  //   final result = await _chatRepository.createOrGetConversation(
-  //     userId1: Account.instance.user.uid,
-  //     userId2: tutorId,
-  //   );
-  //   result.when(
-  //     success: (conversationId) {
-  //       openChatBroadcast.add(AsyncState.success(conversationId));
-  //     },
-  //     failure: (message) {
-  //       openChatBroadcast.add(AsyncState.failure(message));
-  //     },
-  //   );
-  // }
+  Future<void> findOrCreateConversation(int studentId, tutorId) async {
+    openChatBroadcast.add(AsyncState.loading());
+
+    final result = await _conversationRepository.findOrCreateConversation(
+      studentId,
+      tutorId,
+    );
+    result.when(
+      success: (conversationId) {
+        openChatBroadcast.add(AsyncState.success(conversationId));
+      },
+      failure: (message) {
+        openChatBroadcast.add(AsyncState.failure(message));
+      },
+    );
+  }
 
   void addFavoriteTutor({
     required int studentId,

@@ -17,6 +17,7 @@ class User with _$User {
       int id,
       String? username,
       String? email,
+      String? fcmToken,
       Role? role,
       String? name,
       String? school,

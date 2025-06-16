@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:tutorconnect/data/manager/account.dart';
 import 'package:tutorconnect/domain/model/schedule_slot.dart';
@@ -16,6 +17,7 @@ import '../../../../domain/model/review.dart';
 import '../../../../domain/model/tutor.dart';
 import '../../../../theme/color_platte.dart';
 import '../../../../theme/text_styles.dart';
+import '../../../navigation/route_model.dart';
 
 class TutorProfileScreen extends StatefulWidget {
   final Tutor tutor;
@@ -70,33 +72,36 @@ class _TutorProfileScreenState extends State<TutorProfileScreen> {
         },
       );
     });
-    // _bloc.openChatBroadcast.listen((state) {
-    //   state.when(
-    //     loading: () {
-    //       showDialog(
-    //         context: context,
-    //         barrierDismissible: false,
-    //         builder: (_) => const Center(child: CircularProgressIndicator()),
-    //       );
-    //     },
-    //     success: (data) {
-    //       Navigator.pop(context);
-    //       context.push(
-    //         Routes.chatPage,
-    //         extra: {
-    //           'conversationId': data,
-    //           'user': widget.tutor,
-    //         }
-    //       );
-    //     },
-    //     failure: (message) {
-    //       Navigator.pop(context);
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(content: Text("Mở cuộc trò chuyện thất bại!")),
-    //       );
-    //     },
-    //   );
-    // });
+    _bloc.openChatBroadcast.listen((state) {
+      state.when(
+        loading: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const Center(child: CircularProgressIndicator()),
+          );
+        },
+        success: (data) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Mở cuộc trò chuyện thành công!")),
+          );
+          context.push(
+            Routes.chatPage,
+            extra: {
+              'conversation': data,
+              'user': widget.tutor.user,
+            }
+          );
+        },
+        failure: (message) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Mở cuộc trò chuyện thất bại!")),
+          );
+        },
+      );
+    });
   }
 
 
@@ -185,7 +190,7 @@ Widget _buildContent(List<Review> reviews) {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // _bloc.openOrCreateChat(widget.tutor.uid);
+                          _bloc.findOrCreateConversation(student!.id, widget.tutor.id);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.color500,

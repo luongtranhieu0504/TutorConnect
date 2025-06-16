@@ -45,10 +45,7 @@ class FormatUtils {
     }
   }
 
-  static String formatTimeAgoWithTimeStamp(Timestamp timestamp) {
-    final dateTime = timestamp.toDate();
-    return formatTimeAgo(dateTime);
-  }
+
 
   static String weekdayName(int weekday) {
     const weekdays = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];

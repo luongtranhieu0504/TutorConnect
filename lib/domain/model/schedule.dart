@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tutorconnect/domain/model/other_user.dart';
 import 'package:tutorconnect/domain/model/schedule_slot.dart';
 import 'package:tutorconnect/domain/model/student.dart';
 import 'package:tutorconnect/domain/model/tutor.dart';

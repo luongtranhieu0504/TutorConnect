@@ -1,23 +1,22 @@
-// import 'package:tutorconnect/domain/models/coversation_model.dart';
-//
-// abstract class MessageState {}
-// class MessageInitialState extends MessageState {}
-//
-// class MessageLoadingState extends MessageState {}
-//
-// class MessageSuccessState extends MessageState {
-//   final List<ConversationWithUser> chatUsers;
-//
-//   MessageSuccessState({
-//     required this.chatUsers,
-//   });
-//
-// }
-// class MessageFailureState extends MessageState {
-//   final String error;
-//
-//   MessageFailureState({
-//     required this.error,
-//   });
-// }
-//
+import '../../../domain/model/conversation.dart';
+
+abstract class MessageState {}
+class MessageInitialState extends MessageState {}
+
+class MessageLoadingState extends MessageState {}
+
+class MessageSuccessState extends MessageState {
+  final List<Conversation> conversations;
+  MessageSuccessState({
+    required this.conversations,
+  });
+
+}
+class MessageFailureState extends MessageState {
+  final String error;
+
+  MessageFailureState({
+    required this.error,
+  });
+}
+

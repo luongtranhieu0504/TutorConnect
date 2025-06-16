@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tutorconnect/data/network/dto/other_user_dto.dart';
 import 'package:tutorconnect/domain/model/schedule.dart';
 import 'tutor_dto.dart';
 import 'student_dto.dart';

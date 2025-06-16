@@ -20,4 +20,8 @@ class ScheduleSlotDto with _$ScheduleSlotDto {
 
   factory ScheduleSlotDto.fromJson(Map<String, dynamic> json) =>
       _$ScheduleSlotDtoFromJson(json);
+
+
 }
+
+

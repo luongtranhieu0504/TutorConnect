@@ -9,6 +9,8 @@ import 'package:tutorconnect/presentation/widgets/or_divider.dart';
 import 'package:tutorconnect/presentation/widgets/password_text_field.dart';
 import 'package:tutorconnect/theme/color_platte.dart';
 import '../../../data/manager/account.dart';
+import '../../../data/network/socket/socket_service.dart';
+import '../../../domain/services/notification_service.dart';
 import '../../../theme/text_styles.dart';
 import 'login_bloc.dart';
 
@@ -24,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool rememberMe = false;
-  final user = Account.instance.user;
   String? typeRole;
 
 
@@ -41,7 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (_) => const Center(child: CircularProgressIndicator()),
           );
         },
-        success: (data) {
+        success: (data) async {
+          final user = Account.instance.user;
+          Navigator.pop(context); // Close the loading dialog
+          // Initialize socket service here
+          getIt<SocketService>().init();
+          await NotificationService().initialize(context);
           if (user.photoUrl == null || user.address == null) {
             context.go(Routes.updateUserPage);
           } else {

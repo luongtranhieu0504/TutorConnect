@@ -1,74 +1,87 @@
+// lib/data/manager/status_manager.dart
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../manager/account.dart';
+import 'dart:ui';
+import 'package:flutter/services.dart';
+import 'package:tutorconnect/data/manager/account.dart';
+import 'package:tutorconnect/data/network/api/auth_api.dart';
+import 'package:tutorconnect/di/di.dart';
 
 class StatusManager {
   static final instance = StatusManager._();
   StatusManager._();
 
-  final _userStatusController = StreamController<Map<String, String>>.broadcast();
-  Stream<Map<String, String>> get userStatusStream => _userStatusController.stream;
+  final _userApi = getIt<AuthApi>();
+  final _statusStreamController = StreamController<Map<int, Map<String, dynamic>>>.broadcast();
+  Stream<Map<int, Map<String, dynamic>>> get userStatusStream => _statusStreamController.stream;
 
-  final Map<String, String> _userStatusCache = {};
+  Timer? _statusRefreshTimer;
+  final Map<int, Map<String, dynamic>> _userStatuses = {};
 
-  final String _baseUrl = 'https://your-api-url.com'; // Replace with your API base URL
-
-  // Update status when user logs in
-  Future<void> setUserOnline() async {
-    if (!Account.instance.isLoggedIn) return;
-
-    final uid = Account.instance.user.id;
-    final response = await http.post(
-      Uri.parse('$_baseUrl/users/$uid/status'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'status': 'online'}),
-    );
-
-    if (response.statusCode == 200) {
-      final updatedUser = Account.instance.user.copyWith(state: 'online');
-      await Account.instance.saveUser(updatedUser);
-    }
-  }
-
-  // Update status when user logs out or app closes
-  Future<void> setUserOffline() async {
-    if (!Account.instance.isLoggedIn) return;
-
-    final uid = Account.instance.user.id;
-    await http.post(
-      Uri.parse('$_baseUrl/users/$uid/status'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'status': 'offline'}),
-    );
-  }
-
-  // Fetch a specific user's status
-  Future<String> getUserStatus(String userId) async {
-    if (_userStatusCache.containsKey(userId)) {
-      return _userStatusCache[userId]!;
-    }
-
+  Future<void> setUserOnline(int userId) async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl/users/$userId/status'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final status = data['status'] ?? 'offline';
-        _userStatusCache[userId] = status;
-        return status;
+      await _userApi.updateUserStatus(userId, {
+        'data': {
+          'state': "online",
+        }
+      });
+    } catch (e) {
+      print('Error setting user online: $e');
+    }
+  }
+
+  Future<void> setUserOffline(int userId) async {
+    try {
+      await _userApi.updateUserStatus(userId, {
+        'data': {
+          'state': "offline",
+        }
+      });
+    } catch (e) {
+      print('Error setting user offline: $e');
+    }
+  }
+
+  Future<void> fetchUserStatus(int userId) async {
+    try {
+      final response = await _userApi.getUserById(userId);
+      if (response.data != null) {
+        _userStatuses[userId] = {
+          'isOnline': response.data!.state == "online",
+        };
+        _statusStreamController.add({userId: _userStatuses[userId]!});
       }
     } catch (e) {
-      // Handle error
+      print('Error fetching user status: $e');
     }
-    return 'offline';
   }
 
-  // Listen to a user's status changes (polling example)
-  void listenToUserStatus(String userId) {
-    Timer.periodic(Duration(seconds: 10), (timer) async {
-      final status = await getUserStatus(userId);
-      _userStatusCache[userId] = status;
-      _userStatusController.add(_userStatusCache);
+  void startStatusPolling() {
+    _statusRefreshTimer?.cancel();
+    _statusRefreshTimer = Timer.periodic(Duration(seconds: 30), (timer) {
+      for (var userId in _userStatuses.keys) {
+        fetchUserStatus(userId);
+      }
     });
+  }
+
+  void listenToAppLifecycle() {
+    SystemChannels.lifecycle.setMessageHandler((msg) async {
+      if (msg == AppLifecycleState.resumed.toString()) {
+        if (Account.instance.user.id != 0) {
+          await setUserOnline(Account.instance.user.id);
+        }
+      } else if (msg == AppLifecycleState.paused.toString() ||
+                msg == AppLifecycleState.detached.toString()) {
+        if (Account.instance.user.id != 0) {
+          await setUserOffline(Account.instance.user.id);
+        }
+      }
+      return null;
+    });
+  }
+
+  void dispose() {
+    _statusRefreshTimer?.cancel();
+    _statusStreamController.close();
   }
 }

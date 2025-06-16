@@ -53,8 +53,6 @@ class LoginBloc {
 
   void updateUser({
     required int id,
-    String? username,
-    String? email,
     String? photoUrl,
     String? phoneNumber,
     String? name,
@@ -67,8 +65,6 @@ class LoginBloc {
     updateBroadcast.add(const AsyncState.loading());
     final result = await _authRepository.updateUser(
       id,
-      username,
-      email,
       photoUrl,
       phoneNumber,
       name,

@@ -12,10 +12,17 @@ class Account {
   Account._();
 
   static const _keyUser = 'logged_in_user';
+  static const _keyToken = 'auth_token';
 
   User? _user;
-  User get user => _user!;
-  // Add student field
+  User? get userOrNull => _user; // ✅ safe getter
+  User get user {
+    if (_user == null) {
+      throw StateError('User is null. Make sure to check isLoggedIn first.');
+    }
+    return _user!;
+  }
+
   Student? _student;
   Student? get student => _student;
 
@@ -27,11 +34,7 @@ class Account {
   final tutorBroadcast = StreamWrapper<Tutor?>(broadcast: true);
 
   bool _isLoggedIn = false;
-
   bool get isLoggedIn => _isLoggedIn;
-
-  static const _keyToken = 'auth_token';
-
 
   final userBroadcast = StreamWrapper<User?>(broadcast: true);
 
@@ -39,12 +42,6 @@ class Account {
     _user = await _loadUserFromPrefs();
     _isLoggedIn = _user != null;
     userBroadcast.add(_user);
-
-    // Set user online status
-    // if (_isLoggedIn) {
-    //   // Assuming you have a method to set user online
-    //   await StatusManager.instance.setUserOnline();
-    // }
   }
 
   Future<void> saveUser(User? user, {String? token}) async {
@@ -56,7 +53,6 @@ class Account {
     } else {
       final jsonStr = jsonEncode(user.toJson());
       await prefs.setString(_keyUser, jsonStr);
-
       if (token != null) {
         await prefs.setString(_keyToken, token);
       }
@@ -66,7 +62,6 @@ class Account {
     _isLoggedIn = _user != null;
     userBroadcast.add(_user);
   }
-
 
   Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -86,30 +81,26 @@ class Account {
     }
   }
 
-  // Save student data
   void saveStudent(Student? student) {
     _student = student;
     studentBroadcast.add(_student);
   }
 
-  // Save tutor data
   void saveTutor(Tutor? tutor) {
     _tutor = tutor;
     tutorBroadcast.add(_tutor);
   }
 
-  Future<void> signOut() async {
-    await StatusManager.instance.setUserOffline();
+  Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyUser);
+    await prefs.remove(_keyToken);
     _user = null;
     _isLoggedIn = false;
-    _student = null; // Clear student data
-    studentBroadcast.add(null);
-    _tutor = null; // Clear tutor data
-    tutorBroadcast.add(null);
+    _student = null;
+    _tutor = null;
     userBroadcast.add(null);
+    studentBroadcast.add(null);
+    tutorBroadcast.add(null);
   }
-
-
 }
