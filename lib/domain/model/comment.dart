@@ -10,8 +10,10 @@ class Comment with _$Comment {
   const factory Comment(
       int id,
       String? content,
+      List<String>? imageUrls,
       User author,
       Post post,
+      DateTime createdAt,
       ) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

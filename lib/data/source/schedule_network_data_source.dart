@@ -18,7 +18,11 @@ class ScheduleNetworkDataSource {
         tutorId: tutorId,
       );
 
-  Future<ResponseDto<ScheduleDto>> updateSchedule(int id, Map<String, dynamic> data) => _scheduleApi.updateSchedule(id, data);
+  Future<ResponseDto<ScheduleDto>> updateSchedule(int id, Map<String, dynamic> data) => _scheduleApi.updateSchedule(
+    id, {
+    'data': data,
+    }
+  );
 
   Future<ResponseDto<ScheduleDto>> createSchedule(AddScheduleDto addScheduleDto) => _scheduleApi.createSchedule(addScheduleDto.toStrapiJson());
 

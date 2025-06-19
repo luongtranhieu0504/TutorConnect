@@ -20,4 +20,6 @@ class Routes {
   static const String tutorProfilePage = '/tutor-profile';
   static const String commentPage = '/comment';
   static const String scheduleFormPage = '/schedule-form';
+
+  static const String calendarPage = '/calendar';
 }

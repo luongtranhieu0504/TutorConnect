@@ -8,8 +8,10 @@ extension CommentDtoExtension on CommentDto {
     return Comment(
       id ?? 0,
       content,
+      imageUrls,
       author!.toModel(),
       post!.toModel(),
+      createdAt ?? DateTime.now(),
     );
   }
 }

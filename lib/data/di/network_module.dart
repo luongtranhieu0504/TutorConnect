@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tutorconnect/data/network/api/conversation_api.dart';
 import 'package:tutorconnect/data/network/api/message_api.dart';
+import 'package:tutorconnect/data/network/api/post_api.dart';
 import 'package:tutorconnect/data/network/api/review_api.dart';
 import 'package:tutorconnect/data/network/api/schedule_api.dart';
 import 'package:tutorconnect/data/network/api/student_api.dart';
@@ -35,4 +36,7 @@ abstract class NetworkModule {
 
   @singleton
   ScheduleApi provideScheduleApi(Dio dio) => ScheduleApi(dio);
+
+  @singleton
+  PostApi providePostApi(Dio dio) => PostApi(dio);
 }

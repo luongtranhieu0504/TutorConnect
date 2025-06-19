@@ -14,6 +14,7 @@ extension PostDtoExtension on PostDto {
       likedBy?.map((e) => e.toModel()).toList() ?? [],
       likeCount ?? 0,
       commentCount ?? 0,
+      createdAt ?? DateTime.now(),
       comments?.map((e) => e.toModel()).toList() ?? [],
     );
   }

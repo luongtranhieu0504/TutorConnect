@@ -16,6 +16,7 @@ import 'package:tutorconnect/data/di/network_module.dart' as _i728;
 import 'package:tutorconnect/data/network/api/auth_api.dart' as _i958;
 import 'package:tutorconnect/data/network/api/conversation_api.dart' as _i881;
 import 'package:tutorconnect/data/network/api/message_api.dart' as _i830;
+import 'package:tutorconnect/data/network/api/post_api.dart' as _i256;
 import 'package:tutorconnect/data/network/api/review_api.dart' as _i544;
 import 'package:tutorconnect/data/network/api/schedule_api.dart' as _i554;
 import 'package:tutorconnect/data/network/api/student_api.dart' as _i955;
@@ -30,6 +31,8 @@ import 'package:tutorconnect/data/repositories/conversation_repository_impl.dart
     as _i818;
 import 'package:tutorconnect/data/repositories/message_repository_impl.dart'
     as _i53;
+import 'package:tutorconnect/data/repositories/post_repository_impl.dart'
+    as _i361;
 import 'package:tutorconnect/data/repositories/review_repositpry_impl.dart'
     as _i1060;
 import 'package:tutorconnect/data/repositories/schedule_repository_impl.dart'
@@ -45,6 +48,8 @@ import 'package:tutorconnect/data/source/conversation_network_data_source.dart'
     as _i847;
 import 'package:tutorconnect/data/source/message_network_data_source.dart'
     as _i570;
+import 'package:tutorconnect/data/source/post_network_data_source.dart'
+    as _i867;
 import 'package:tutorconnect/data/source/review_network_data_source.dart'
     as _i940;
 import 'package:tutorconnect/data/source/schedule_network_data_source.dart'
@@ -58,6 +63,7 @@ import 'package:tutorconnect/domain/repository/conversation_repository.dart'
     as _i669;
 import 'package:tutorconnect/domain/repository/message_repository.dart'
     as _i596;
+import 'package:tutorconnect/domain/repository/post_repository.dart' as _i345;
 import 'package:tutorconnect/domain/repository/review_repository.dart' as _i901;
 import 'package:tutorconnect/domain/repository/schedule_repository.dart'
     as _i1027;
@@ -69,6 +75,7 @@ import 'package:tutorconnect/presentation/screens/login/login_bloc.dart'
     as _i667;
 import 'package:tutorconnect/presentation/screens/message/message_bloc.dart'
     as _i18;
+import 'package:tutorconnect/presentation/screens/post/post_bloc.dart' as _i655;
 import 'package:tutorconnect/presentation/screens/profile/profile_bloc.dart'
     as _i971;
 import 'package:tutorconnect/presentation/screens/scheduall/schedule_bloc.dart'
@@ -114,6 +121,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => networkModule.provideMessageApi(gh<_i361.Dio>()));
     gh.singleton<_i554.ScheduleApi>(
         () => networkModule.provideScheduleApi(gh<_i361.Dio>()));
+    gh.singleton<_i256.PostApi>(
+        () => networkModule.providePostApi(gh<_i361.Dio>()));
     gh.singleton<_i93.StudentNetworkDataSource>(
         () => _i93.StudentNetworkDataSource(gh<_i955.StudentApi>()));
     gh.singleton<_i992.ScheduleNetworkDataSource>(
@@ -132,10 +141,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i315.TutorNetworkDataSource(gh<_i494.TutorApi>()));
     gh.singleton<_i847.ConversationNetworkDataSource>(
         () => _i847.ConversationNetworkDataSource(gh<_i881.ConversationApi>()));
+    gh.singleton<_i867.PostNetworkDataSource>(
+        () => _i867.PostNetworkDataSource(gh<_i256.PostApi>()));
     gh.singleton<_i901.ReviewRepository>(
         () => _i1060.ReviewRepositoryImpl(gh<_i940.ReviewNetworkDataSource>()));
     gh.factory<_i1059.StudentHomeBloc>(
         () => _i1059.StudentHomeBloc(gh<_i1073.StudentHomeRepository>()));
+    gh.singleton<_i345.PostRepository>(
+        () => _i361.PostRepositoryImpl(gh<_i867.PostNetworkDataSource>()));
     gh.singleton<_i596.MessageRepository>(() => _i53.MessageRepositoryImpl(
           gh<_i570.MessageNetworkDataSource>(),
           gh<_i79.SocketService>(),
@@ -149,6 +162,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i669.ConversationRepository>(() =>
         _i818.ConversationRepositoryImpl(
             gh<_i847.ConversationNetworkDataSource>()));
+    gh.factory<_i655.PostBloc>(
+        () => _i655.PostBloc(gh<_i345.PostRepository>()));
     gh.factory<_i667.LoginBloc>(
         () => _i667.LoginBloc(gh<_i11.AuthRepository>()));
     gh.factory<_i971.ProfileBloc>(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tutorconnect/domain/model/conversation.dart';
 import 'package:tutorconnect/domain/model/other_user.dart';
+import 'package:tutorconnect/domain/model/schedule.dart';
 import 'package:tutorconnect/domain/model/student.dart';
 import 'package:tutorconnect/presentation/navigation/route_model.dart';
 import 'package:tutorconnect/presentation/screens/login/update_user_screen.dart';
@@ -17,6 +18,7 @@ import '../screens/login/register_screen.dart';
 import '../screens/message/message_screen.dart';
 import '../screens/post/post_screen.dart';
 import '../screens/profile/profile_screen.dart';
+import '../screens/scheduall/calendar_screen.dart';
 import '../screens/scheduall/schedule_form_screen.dart';
 import '../screens/scheduall/schedule_screen.dart';
 import '../screens/student/tutor_map/tutor_map_screen.dart';
@@ -162,6 +164,17 @@ final router = GoRouter(
           student: student,
         );
       },
+    ),
+    GoRoute(
+      path: Routes.calendarPage,
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>?;
+        final schedules = extra?['schedules'] as List<Schedule>;
+        return CalendarScreen(
+          schedules: schedules,
+        );
+      },
     )
+
   ],
 );

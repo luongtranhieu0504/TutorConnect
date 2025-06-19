@@ -31,7 +31,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   final tutor = Account.instance.tutor;
 
   late TabController _tabController;
-
+  late List<Schedule> schedules = [];
   @override
   void initState() {
     super.initState();
@@ -65,6 +65,14 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       appBar: AppBar(
         title: const Text('Lịch học'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_month),
+              onPressed: () {
+                context.push(Routes.calendarPage, extra: {'schedules': schedules});
+              },
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -74,88 +82,57 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           ],
         ),
       ),
-      body: BlocBuilder<ScheduleBloc, ScheduleState>(
-        bloc: _bloc,
-        builder: (context, state) {
-          if (state is ScheduleLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ScheduleSuccessState) {
-            final approvedSchedules =
-                state.schedules.where((s) => s.status == 'approved').toList();
-            final pendingSchedules =
-                state.schedules.where((s) => s.status == 'pending').toList();
-            final cancelledOrCompleteSchedules = state.schedules
-                .where((s) => s.status == 'cancelled' || s.status == 'complete')
-                .toList();
-            return TabBarView(
-              controller: _tabController,
-              children: [
-                _buildApprovedTab(approvedSchedules),
-                _buildPendingTab(pendingSchedules),
-                _buildCancelledOrCompleteTab(cancelledOrCompleteSchedules),
-              ],
-            );
-          } else if (state is ScheduleFailureState) {
-            return Center(child: Text(state.error));
+      body: RefreshIndicator(
+        onRefresh: () async {
+          if (user.typeRole == "Student") {
+            _bloc.getSchedules(studentId: student?.id);
+          } else {
+            _bloc.getSchedules(tutorId: tutor?.id);
           }
-          return const Center(child: Text('Hiện tại chưa có lịch học nào.'));
         },
+        child: BlocBuilder<ScheduleBloc, ScheduleState>(
+          bloc: _bloc,
+          builder: (context, state) {
+            if (state is ScheduleLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ScheduleSuccessState) {
+              schedules = state.schedules;
+              final approvedSchedules =
+                  state.schedules.where((s) => s.status == 'approved').toList();
+              final pendingSchedules =
+                  state.schedules.where((s) => s.status == 'pending').toList();
+              final cancelledOrCompleteSchedules = state.schedules
+                  .where((s) => s.status == 'cancelled' || s.status == 'complete')
+                  .toList();
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildApprovedTab(approvedSchedules),
+                  _buildPendingTab(pendingSchedules),
+                  _buildCancelledOrCompleteTab(cancelledOrCompleteSchedules),
+                ],
+              );
+            } else if (state is ScheduleFailureState) {
+              return Center(child: Text(state.error));
+            }
+            return const Center(child: Text('Hiện tại chưa có lịch học nào.'));
+          },
+        ),
       ),
     );
   }
 
   Widget _buildApprovedTab(List<Schedule> schedules) {
-    if (schedules.isEmpty) {
-      return const Center(child: Text('Không có lịch học đã duyệt.'));
-    }
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
           Expanded(
-            child: TableCalendar(
-              firstDay: DateTime.now(),
-              lastDay: DateTime(2100),
-              focusedDay: DateTime.now(),
-              eventLoader: (day) {
-                return schedules
-                    .where((s) => isSameDay(s.startDate, day))
-                    .toList();
-              },
-              onDaySelected: (selectedDay, _) {
-                _bloc.getApprovedSchedulesByDate(selectedDay);
-              },
-              calendarStyle: const CalendarStyle(
-                markerDecoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
             child: ListView.builder(
               itemCount: schedules.length,
               itemBuilder: (context, index) {
                 final schedule = schedules[index];
-                return ListTile(
-                  title: Text(schedule.topic!),
-                  subtitle: Text(
-                      'Bắt đầu: ${DateFormat('dd/MM/yyyy').format(schedule.startDate!)}'),
-                  trailing: user.typeRole == 'Tutor'
-                      ? ElevatedButton(
-                          onPressed: () {
-                            // Mark as complete
-                            _bloc.updateSchedule(
-                                schedule.id,
-                                schedule.copyWith(
-                                  status: 'complete',
-                                ));
-                          },
-                          child: const Text('Hoàn thành'),
-                        )
-                      : null,
-                );
+                return _buildScheduleMessage(schedule, context);
               },
             ),
           ),
@@ -347,6 +324,24 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   )
                 ],
               )
+            else if (user.typeRole == "Tutor" && schedule.status == "approved")
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _bloc.updateSchedule(
+                            schedule.id,
+                            schedule.copyWith(
+                              status: 'complete',
+                            ));
+                      });
+                    },
+                    child: const Text('Hoàn thành'),
+                  ),
+                ],
+              )
           ],
         ),
       ),
@@ -382,11 +377,100 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       case 'pending':
         return 'Chờ xác nhận';
       case 'approved':
-        return 'Đã hoàn thành';
+        return 'Đã xác nhận';
       case 'cancelled':
         return 'Đã hủy';
+      case 'complete':
+        return 'Đã hoàn thành';
       default:
         return status;
     }
+  }
+
+  void _showCalendarPopup(BuildContext context, List<Schedule> schedules) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Lịch học'),
+          content: SizedBox(
+            height: 400, // Set a fixed height for the calendar
+            child: Column(
+              children: [
+                Expanded(
+                  child: TableCalendar(
+                    firstDay: DateTime.now(),
+                    lastDay: DateTime(2100),
+                    focusedDay: DateTime.now(),
+                    eventLoader: (day) {
+                      return schedules
+                          .where((s) =>
+                      isSameDay(s.startDate, day) &&
+                          s.status != 'cancelled' &&
+                          s.status != 'complete')
+                          .toList();
+                    },
+                    onDaySelected: (selectedDay, _) {
+                      final selectedSchedules = schedules
+                          .where((s) =>
+                      isSameDay(s.startDate, selectedDay) &&
+                          s.status != 'cancelled' &&
+                          s.status != 'complete')
+                          .toList();
+                      if (selectedSchedules.isNotEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text(
+                                  'Lịch học ngày ${DateFormat('dd/MM/yyyy').format(selectedDay)}'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: selectedSchedules.map((schedule) {
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Chủ đề: ${schedule.topic!}"),
+                                      Text("Địa điểm: ${schedule.address!}"),
+                                      const SizedBox(height: 8),
+                                      Text("⏰ Lịch học cố định:"),
+                                      ...schedule.slots.map((slot) {
+                                        final day =
+                                        FormatUtils.weekdayName(slot.weekday!);
+                                        final start =
+                                            "${slot.startTime?.hour.toString().padLeft(2, '0')}:${slot.startTime?.minute.toString().padLeft(2, '0')}";
+                                        final end =
+                                            "${slot.endTime?.hour.toString().padLeft(2, '0')}:${slot.endTime?.minute.toString().padLeft(2, '0')}";
+                                        return Text("• $day: $start - $end");
+                                      }),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                    calendarStyle: const CalendarStyle(
+                      markerDecoration: BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Đóng'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

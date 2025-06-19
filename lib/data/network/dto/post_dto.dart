@@ -13,13 +13,11 @@ class PostDto with _$PostDto {
 
     @JsonKey(name: 'content') String? content,
     @JsonKey(name: 'imageUrls') List<String>? imageUrls,
-
     @JsonKey(name: 'author') UserDto? author,
     @JsonKey(name: 'liked_by') List<UserDto>? likedBy,
-
     @JsonKey(name: 'like_count') int? likeCount,
     @JsonKey(name: 'comment_count') int? commentCount,
-
+    @JsonKey(name: 'created_at') DateTime? createdAt,
     @JsonKey(name: 'comments') List<CommentDto>? comments,
   }) = _PostDto;
 

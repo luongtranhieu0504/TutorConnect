@@ -161,17 +161,29 @@ class NotificationService {
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
     final data = message.data;
-    // Nếu conversation là string, parse lại
-    final conversationJson = data['conversation'];
-    final conversation = conversationJson is String
-        ? Conversation.fromJson(jsonDecode(conversationJson))
-        : Conversation.fromJson(conversationJson);
+    final type = data['type'];
 
-    // So sánh id để quyết định có show notification không
-    if (currentConversationId != conversation.id) {
+    if (type == 'chat') {
+      // Xử lý chat như cũ
+      final conversationJson = data['conversation'];
+      final conversation = conversationJson is String
+          ? Conversation.fromJson(jsonDecode(conversationJson))
+          : Conversation.fromJson(conversationJson);
+
+      if (currentConversationId != conversation.id) {
+        await _showLocalNotification(
+          title: message.notification?.title ?? 'Tin nhắn mới',
+          body: message.notification?.body ?? '',
+          payload: jsonEncode(data),
+        );
+      }
+    } else {
+      // Xử lý các loại notify khác (reminder, schedule, ...)
+      String title = message.notification?.title ?? data['title'] ?? 'Thông báo';
+      String body = message.notification?.body ?? data['body'] ?? data['content'] ?? '';
       await _showLocalNotification(
-        title: message.notification?.title,
-        body: message.notification?.body,
+        title: title,
+        body: body,
         payload: jsonEncode(data),
       );
     }
@@ -208,14 +220,24 @@ class NotificationService {
   void _handleNotificationTap(BuildContext context, Map<String, dynamic> data) {
     try {
       debugPrint('Notification payload: $data');
-      // Nếu conversation là object, không cần decode lại
-      final conversationJson = data['conversation'];
-      final conversation = conversationJson is String
-          ? Conversation.fromJson(jsonDecode(conversationJson))
-          : Conversation.fromJson(conversationJson);
-      final otherUserId = int.tryParse(data['senderId'].toString());
-
-      _fetchUserAndNavigate(context, otherUserId!, conversation);
+      final type = data['type'];
+      if (type == 'chat') {
+        final conversationJson = data['conversation'];
+        final conversation = conversationJson is String
+            ? Conversation.fromJson(jsonDecode(conversationJson))
+            : Conversation.fromJson(conversationJson);
+        final otherUserId = int.tryParse(data['senderId'].toString());
+        _fetchUserAndNavigate(context, otherUserId!, conversation);
+      } else if (type == 'reminder' || type == 'schedule') {
+        // Ví dụ: điều hướng đến trang lịch học
+        context.push(
+          Routes.schedulePage
+        );
+      } else {
+        // Các loại notify khác
+        // Có thể show dialog hoặc điều hướng tùy ý
+        debugPrint('Unhandled notification type: $type');
+      }
     } catch (e) {
       debugPrint('Error handling notification tap: $e');
     }

@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:intl/intl.dart';
-import 'package:tutorconnect/domain/model/other_user.dart';
 import 'package:tutorconnect/domain/repository/conversation_repository.dart';
 import 'package:tutorconnect/domain/repository/student_home_repository.dart';
 import 'package:tutorconnect/presentation/screens/scheduall/schedule_state.dart';
@@ -14,9 +13,7 @@ import '../../../common/stream_wrapper.dart';
 import '../../../data/manager/account.dart';
 import '../../../domain/model/schedule.dart';
 import '../../../domain/model/student.dart';
-import '../../../domain/model/user.dart';
 import '../../../domain/repository/schedule_repository.dart';
-import '../chat/chat_state.dart';
 
 @injectable
 class ScheduleBloc extends Cubit<ScheduleState> {
@@ -46,6 +43,8 @@ class ScheduleBloc extends Cubit<ScheduleState> {
       result.when(
         success: (createdSchedule) {
           createScheduleBroadcast.add(AsyncState.success(true));
+          // fetch data again after create
+          getSchedules(studentId: schedule.student.id, tutorId: schedule.tutor.id);
         },
         failure: (error) {
           createScheduleBroadcast.add(AsyncState.failure(error));
@@ -95,55 +94,6 @@ class ScheduleBloc extends Cubit<ScheduleState> {
     );
   }
 
-
-  // void updateScheduleAndNotify(String scheduleId, Schedule schedule) async {
-  //   sendChatBroadcast.add(AsyncState.loading());
-  //   try {
-  //     // First update the schedule
-  //     final scheduleResult = await _scheduleRepository.updateSchedule(
-  //       scheduleId,
-  //       schedule,
-  //     );
-  //     if (scheduleResult.isSuccess) {
-  //       // Get or create conversation between tutor and student
-  //       final chatResult = await _chatRepository.createOrGetConversation(
-  //         userId1: schedule.tutorId,
-  //         userId2: schedule.studentId,
-  //       );
-  //       if (chatResult.isSuccess) {
-  //         final conversationId = chatResult.data;
-  //         final message = ChatModel(
-  //           id: '',
-  //           senderId: schedule.tutorId,
-  //           receiverId: schedule.studentId,
-  //           content: 'Lịch học mới đã được tạo: ${schedule.topic}',
-  //           type: 'schedule',
-  //           timestamp: DateTime.now(),
-  //           isRead: false,
-  //           scheduleId: scheduleId,
-  //         );
-  //
-  //         // Send the chat message
-  //         final sendResult = await _chatRepository.sendChat(conversationId!, message);
-  //         if (sendResult.isSuccess) {
-  //           // Explicitly emit success state
-  //           sendChatBroadcast.add(AsyncState.success(null));
-  //         } else {
-  //           sendChatBroadcast.add(AsyncState.failure(sendResult.message!));
-  //         }
-  //       }
-  //     } else {
-  //       scheduleResult.when(
-  //         success: (_) {},
-  //         failure: (message) {
-  //           updateScheduleBroadcast.add(AsyncState.failure(message));
-  //         },
-  //       );
-  //     }
-  //   } catch (e) {
-  //     updateScheduleBroadcast.add(AsyncState.failure(e.toString()));
-  //   }
-  // }
 
 
   void updateSchedule(int scheduleId, Schedule schedule) async {
@@ -200,19 +150,6 @@ void getApprovedSchedulesByDate(DateTime date) async {
 }
 
 
-
-  // void cancelReminder(String scheduleId) async {
-  //   reminderBroadcast.add(AsyncState.loading());
-  //   try {
-  //     final result = await _scheduleRepository.cancelReminder(scheduleId);
-  //     result.when(
-  //       success: (_) => reminderBroadcast.add(AsyncState.success(null)),
-  //       failure: (error) => reminderBroadcast.add(AsyncState.failure(error)),
-  //     );
-  //   } catch (e) {
-  //     reminderBroadcast.add(AsyncState.failure(e.toString()));
-  //   }
-  // }
   @override
   Future<void> close() {
     _scheduleSubscription?.cancel();

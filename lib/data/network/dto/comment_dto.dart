@@ -9,12 +9,11 @@ part 'comment_dto.g.dart';
 class CommentDto with _$CommentDto {
   const factory CommentDto({
     @JsonKey(name: 'id') int? id,
-
     @JsonKey(name: 'content') String? content,
-
+    @JsonKey(name: 'imageUrls') List<String>? imageUrls,
     @JsonKey(name: 'author') UserDto? author,
-
     @JsonKey(name: 'post') PostDto? post,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
   }) = _CommentDto;
 
   factory CommentDto.fromJson(Map<String, dynamic> json) =>
