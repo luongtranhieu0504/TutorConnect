@@ -13,35 +13,19 @@ import '../network/dto/tutor_dto.dart';
 // Add this extension to your tutor_dto.dart file
 extension TutorDtoMapper on TutorDto {
   Tutor toModel() {
-    // Safely convert reviews
-    final List<Review> reviewModels = reviews?.map((reviewDto) {
-      // If the reviewDto doesn't have complete data, create a minimal review
-      return Review(
-        reviewDto.id ?? 0,
-        reviewDto.rating ?? 0,
-        reviewDto.comment ?? '',
-        reviewDto.date ?? DateTime.now(),
-        null, // student can be null if not provided
-        null, // tutor can be null if not provided
-        reviewDto.studentName ?? '',
-      );
-    }).toList() ?? [];
-
     return Tutor(
       id ?? 0,
-      uid,
-      user!.toModel(), // Provide default User
-      schedules?.map((s) => s.toModel()).toList() ?? [],
-      reviewModels, // Use our safely converted reviews
-      conversations?.map((c) => c.toModel()).toList() ?? [],
-      subjects ?? [],
-      degrees ?? [],
+      user!.toModel(),
+      schedules?.map((e) => e.toModel()).toList() ?? [],
+      reviews?.map((e) => e.toModel()).toList() ?? [],
+      conversations?.map((e) => e.toModel()).toList() ?? [],
+      subjects?.cast<String>() ?? [],
       experienceYears,
       pricePerHour,
-      availability?.map((a) => a.toModel()).toList() ?? [],
+      availability?.map((e) => e.toModel()).toList() ?? [],
       bio,
       rating,
-      certifications?.map((c) => c.toModel()).toList() ?? [],
+      certifications?.map((e) => e.toModel()).toList() ?? [],
     );
   }
 }

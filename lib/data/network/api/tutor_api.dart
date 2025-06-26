@@ -26,4 +26,15 @@ abstract class TutorApi {
     @Path('id') int id,
     @Body() Map<String, dynamic> data,
   );
+
+  // Get tutor by ID
+  @GET('/api/tutors/{id}')
+  Future<ResponseDto<TutorDto>> getTutorById(@Path('id') int id);
+
+
+  @GET('/api/tutors')
+  Future<ResponseDto<List<TutorDto>>> getTutors({
+    @Query('filters[subjects][\$contains]') String? subject,
+  });
+
 }

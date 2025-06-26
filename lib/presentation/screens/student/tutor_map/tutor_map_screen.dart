@@ -183,11 +183,11 @@ class _TutorMapScreenState extends State<TutorMapScreen> {
       );
 
       final hasSubject = subject != null && subject.isNotEmpty;
-      final matchSubject = tutor.subjects.contains(subject);
+      final matchSubject = tutor.subjects?.contains(subject);
       final matchDistance = distanceInKm <= distance;
 
       if (hasSubject) {
-        if (!matchSubject || !matchDistance) continue;
+        if (!matchSubject! || !matchDistance) continue;
       } else {
         if (!matchDistance) continue;
       }

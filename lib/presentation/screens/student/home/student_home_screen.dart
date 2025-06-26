@@ -12,6 +12,7 @@ import 'package:tutorconnect/theme/color_platte.dart';
 import 'package:tutorconnect/theme/theme_ultils.dart';
 
 import '../../../../di/di.dart';
+import '../../../../domain/model/tutor.dart';
 import '../../../../domain/model/user.dart';
 import '../../../../theme/text_styles.dart';
 
@@ -31,7 +32,25 @@ class _HomeScreenState extends State<StudentHomeScreen> {
   @override
   initState() {
     super.initState();
-    _bloc.getCurrentStudent();
+    _bloc.loadInitialData();
+
+    _bloc.streamTutorsBySubject.listen((state) {
+      state.when(
+        success: (tutors) {
+          // Handle successful tutor list retrieval
+          context.push(
+            Routes.tutorListPage,
+            extra: tutors,
+          );
+        },
+        failure: (message) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message)),
+          );
+        },
+        loading: () {},
+      );
+    });
   }
 
   @override
@@ -43,7 +62,8 @@ class _HomeScreenState extends State<StudentHomeScreen> {
             return Center(child: CircularProgressIndicator());
           } else if (state is Success) {
             final student = (state).student;
-            return _uiContent(student);
+            final tutors = (state).tutors;
+            return _uiContent(student, tutors);
           } else if (state is Failure) {
             return Center(child: Text(state.message));
           }
@@ -54,7 +74,7 @@ class _HomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
-  Widget _uiContent(Student student) {
+  Widget _uiContent(Student student,List<Tutor> tutors) {
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: Size(double.infinity, 100),
@@ -132,35 +152,14 @@ class _HomeScreenState extends State<StudentHomeScreen> {
                   SizedBox(height: 12),
                   SizedBox(
                       height: 190,
-                      child: ListView(
+                      child: ListView.builder(
                         clipBehavior: Clip.none,
                         scrollDirection: Axis.horizontal,
-                        children: [
-                          _tutorCard(
-                              "Luong Tran Hieu",
-                              "Dạy từ cấp 1 - 3",
-                              "Môn toán",
-                              'assets/images/ML1.png',
-                              "200.0",
-                              '4.8',
-                              200),
-                          _tutorCard(
-                              "Luong Tran Hieu",
-                              "Dạy từ cấp 1 - 3",
-                              "Môn toán",
-                              'assets/images/ML1.png',
-                              "200.0",
-                              '4.8',
-                              200),
-                          _tutorCard(
-                              "Luong Tran Hieu",
-                              "Dạy từ cấp 1 - 3",
-                              "Môn toán",
-                              'assets/images/ML1.png',
-                              "200.0",
-                              '4.8',
-                              200)
-                        ],
+                        itemCount: tutors.length,
+                        itemBuilder: (context, index) {
+                          final tutor = tutors[index];
+                          return _tutorCard(tutor);
+                        },
                       )),
                   SizedBox(height: 20),
                   Text(
@@ -260,38 +259,42 @@ class _HomeScreenState extends State<StudentHomeScreen> {
 
   Widget _subjectCard(
       String title, String iconPath, Color color, int tutorCount) {
-    return Container(
-      width: 159.0,
-      margin: const EdgeInsets.only(right: 12.0),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SvgPicture.asset(iconPath, width: 50, height: 50),
-          const SizedBox(height: 8),
-          RichText(
-            text: TextSpan(
-                text: title,
-                style: AppTextStyles(context).bodyText1.copyWith(color: Colors.white),
-                children: [
-                  TextSpan(
-                    text: "- $tutorCount Tutors",
-                    style:
-                        AppTextStyles(context).bodyText1.copyWith(color: Colors.white70),
-                  ),
-                ]),
-          )
-        ],
+    return GestureDetector(
+      onTap: () {
+        _bloc.getTutorsBySubject(title);
+      },
+      child: Container(
+        width: 159.0,
+        margin: const EdgeInsets.only(right: 12.0),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SvgPicture.asset(iconPath, width: 50, height: 50),
+            const SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                  text: title,
+                  style: AppTextStyles(context).bodyText1.copyWith(color: Colors.white),
+                  children: [
+                    TextSpan(
+                      text: "- $tutorCount Tutors",
+                      style:
+                          AppTextStyles(context).bodyText1.copyWith(color: Colors.white70),
+                    ),
+                  ]),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _tutorCard(String name, String level, String subject,
-      String avatarPath, String price, String rating, int numReviews) {
+  Widget _tutorCard(Tutor tutor) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 300,
@@ -323,22 +326,17 @@ class _HomeScreenState extends State<StudentHomeScreen> {
           CircleAvatar(
             backgroundColor: Colors.transparent,
             radius: 24,
-            backgroundImage: AssetImage('assets/images/ML1.png'),
+            backgroundImage: NetworkImage(tutor.user.photoUrl!),
           ),
           SizedBox(width: 24),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              name,
+              tutor.user.name!,
               style: AppTextStyles(context).bodyText1,
             ),
             SizedBox(height: 4),
             Text(
-              level,
-              style: AppTextStyles(context).bodyText2.copyWith(fontSize: 15),
-            ),
-            SizedBox(height: 4),
-            Text(
-              subject,
+              tutor.subjects.toString(),
               style: AppTextStyles(context).bodyText2.copyWith(fontSize: 15),
             ),
           ]),
@@ -347,20 +345,18 @@ class _HomeScreenState extends State<StudentHomeScreen> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(
             children: [
+              Text(
+                tutor.rating?.toStringAsFixed(1) ?? '0.0',
+                style: AppTextStyles(context).bodyText1.copyWith(fontSize: 14),
+              ),
               Icon(
                 Icons.star,
                 color: Colors.yellow,
               ),
-              SizedBox(width: 4),
-              Text(
-                "$rating ($numReviews học sinh)",
-                style: AppTextStyles(context).bodyText1
-                    .copyWith(fontSize: 14),
-              ),
             ],
           ),
           Text(
-            "$price/buổi",
+            "${tutor.pricePerHour}/buổi",
             style: AppTextStyles(context).bodyText1
                 .copyWith(fontSize: 14),
           ),
@@ -370,7 +366,15 @@ class _HomeScreenState extends State<StudentHomeScreen> {
             title: "Xem thêm thông tin",
             color: AppColors.colorButton,
             textColor: Colors.white,
-            onPressed: () {})
+            onPressed: () {
+              context.push(
+                Routes.tutorProfilePage,
+                extra: {
+                  'tutor': tutor,
+                  'isCurrentUser': false,
+                },
+              );
+            })
       ]),
     );
   }

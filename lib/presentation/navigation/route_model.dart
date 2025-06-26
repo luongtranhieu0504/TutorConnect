@@ -22,4 +22,10 @@ class Routes {
   static const String scheduleFormPage = '/schedule-form';
 
   static const String calendarPage = '/calendar';
+
+  static const String personalInfoPage = '/personal-info';
+
+  static const String favoritePage = '/favorite';
+
+  static const String tutorListPage = '/tutor-list';
 }

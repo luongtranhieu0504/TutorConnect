@@ -48,11 +48,31 @@ class TutorRepositoryImpl implements TutorRepository {
       });
 
   @override
-  Future<TaskResult<List<Tutor>>> getTutorsList() => callApi(() async {
-    final response = await _dataSource.getTutorsList();
-    // response.data là List<TutorDto>
-    return response.data?.map((dto) => dto.toModel()).toList() ?? [];
+  Future<TaskResult<Tutor?>> getTutorById(int id) => callApi(() async {
+    final response = await _dataSource.getTutorById(id);
+    return response.data?.toModel();
   });
+
+  @override
+  Future<TaskResult<List<Tutor>>> getTutorsList({
+    String? subject,
+    bool topRated = false,
+  }) =>
+      callApi(() async {
+        final response = await _dataSource.getTutorsList(subject: subject);
+
+        List<TutorDto> filteredTutors = response.data ?? [];
+
+        if (topRated) {
+          // Filter top-rated tutors with rating >= 4.5 and limit to 5
+          filteredTutors = filteredTutors
+              .where((tutor) => tutor.rating != null && tutor.rating! >= 4.5)
+              .toList()
+              .toList();
+        }
+
+        return filteredTutors.map((dto) => dto.toModel()).toList();
+      });
 
 
 }

@@ -116,7 +116,6 @@ class _MessageScreenState extends State<MessageScreen> {
           null,
           null,
           null,
-          null,
           [],
           [],
           [],

@@ -24,7 +24,6 @@ class User with _$User {
       String? grade,
       String? phone,
       String? photoUrl,
-      dynamic bio,
       String? address,
       String? state,
       String? typeRole,

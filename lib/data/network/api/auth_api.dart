@@ -24,7 +24,10 @@ abstract class AuthApi {
   Future<ResponseDto<LoginResDto>> register(@Body() RegisterReqDto dto);
 
   @PUT('/api/users/{id}')
-  Future<ResponseDto<UserDto>> updateUser(@Path("id") int id, @Body() UpdateUserReqDto dto);
+  Future<ResponseDto<UserDto>> updateUser(
+      @Path('id') int id,
+      @Body() Map<String, dynamic> data
+      );
 
   @PUT('/api/users/{id}')
   Future<ResponseDto<UserDto>> updateUserStatus(

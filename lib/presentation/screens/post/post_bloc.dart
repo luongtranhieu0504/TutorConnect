@@ -90,6 +90,18 @@ class PostBloc extends Cubit<PostState> {
     );
   }
 
+  void likePost(int postId, int userId) async {
+    final result = await _postRepository.likePost(postId, userId);
+    result.when(
+      success: (post) {
+        getPosts();
+      },
+      failure: (message) {
+        // Handle failure if needed
+      },
+    );
+  }
+
 
 
 }

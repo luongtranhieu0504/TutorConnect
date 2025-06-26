@@ -14,13 +14,11 @@ part 'tutor_dto.g.dart';
 class TutorDto with _$TutorDto {
   const factory TutorDto({
     @JsonKey(name: 'id') int? id,
-    @JsonKey(name: 'uid') String? uid,
     @JsonKey(name: 'user') UserDto? user,
     @JsonKey(name: 'schedules') List<ScheduleDto>? schedules,
     @JsonKey(name: 'reviews') List<ReviewDto>? reviews,
     @JsonKey(name: 'conversations') List<ConversationDto>? conversations,
     @JsonKey(name: 'subjects') List<String>? subjects,
-    @JsonKey(name: 'degrees') List<String>? degrees,
     @JsonKey(name: 'experienceYears') int? experienceYears,
     @JsonKey(name: 'pricePerHour') int? pricePerHour,
     @JsonKey(name: 'availability') List<ScheduleSlotDto>? availability,

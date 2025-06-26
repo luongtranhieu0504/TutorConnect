@@ -13,7 +13,6 @@ part 'student.g.dart';
 class Student with _$Student {
   const factory Student(
       int id,
-      String? uid,
       User user,
       List<int> favorites,
       List<Schedule> learningHistory,

@@ -12,7 +12,8 @@ class TextFieldDefault extends StatelessWidget {
       this.controller,
       this.labelText,
       this.maxLines = 1,
-      this.icon});
+      this.icon, required
+      String hintText});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class TextFieldDefault extends StatelessWidget {
           decoration: InputDecoration(
               labelText: labelText,
               labelStyle: TextStyle(color: AppColors.color500),
+              hintText: 'Enter $labelText',
               prefixIcon: Icon(icon),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey, width: 2),

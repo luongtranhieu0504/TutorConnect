@@ -14,4 +14,6 @@ abstract class PostRepository {
   Future<TaskResult<Post>> updatePost(int int, Post post);
 
   Future<TaskResult<bool>> deletePost(int id);
+
+  Future<TaskResult<Post>> likePost(int postId, int userId);
 }

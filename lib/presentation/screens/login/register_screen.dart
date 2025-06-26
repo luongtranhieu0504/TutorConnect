@@ -72,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 8),
                 TextFieldCommon(
                   controller: _nameController,
-                  labelText: "Nhập email",
+                  labelText: "Nhập tên đăng nhập",
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -85,6 +85,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   labelText: "Nhập email",
                 ),
                 const SizedBox(height: 24),
+                Text(
+                  "Vai trò:",
+                  style: AppTextStyles(context).bodyText1,
+                ),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: _selectedRole,
                   onChanged: (value) {
@@ -177,6 +182,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
     _bloc.register(name, email, password, _roleId!);
+    _nameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+    setState(() {
+      _selectedRole = null;
+    });
   }
 }
 

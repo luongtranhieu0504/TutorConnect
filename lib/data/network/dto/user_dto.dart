@@ -24,7 +24,6 @@ class UserDto with _$UserDto {
     @JsonKey(name: 'grade') String? grade,
     @JsonKey(name: 'phone') String? phone,
     @JsonKey(name: 'photoUrl') String? photoUrl,
-    @JsonKey(name: 'bio') dynamic bio, // blocks, có thể là List hoặc Map tùy dữ liệu
     @JsonKey(name: 'address') String? address,
     @JsonKey(name: 'state') String? state,
     @JsonKey(name: 'type_role') String? typeRole,

@@ -13,19 +13,17 @@ part 'tutor.g.dart';
 class Tutor with _$Tutor {
   const factory Tutor(
       int id,
-      String? uid,
       User user,
-      List<Schedule> schedules,
-      List<Review> reviews,
-      List<Conversation> conversations,
-      List<String> subjects,
-      List<String> degrees,
+      List<Schedule>? schedules,
+      List<Review>? reviews,
+      List<Conversation>? conversations,
+      List<String>? subjects,
       int? experienceYears,
       int? pricePerHour,
-      List<ScheduleSlot> availability,
+      List<ScheduleSlot>? availability,
       String? bio,
       double? rating,
-      List<Certification> certifications,
+      List<Certification>? certifications,
       ) = _Tutor;
 
   factory Tutor.fromJson(Map<String, dynamic> json) =>

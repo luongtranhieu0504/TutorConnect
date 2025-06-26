@@ -101,6 +101,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 controller: _nameController,
                 labelText: "Họ và tên",
                 icon: Icons.person,
+                hintText: "Nhập họ và tên của bạn",
               ),
               const SizedBox(height: 12.0),
               PhoneTextField(
@@ -111,6 +112,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 controller: _addressController,
                 labelText: "Địa chỉ",
                 icon: Icons.home_work_sharp,
+                hintText: "Nhập địa chỉ của bạn",
               ),
               const SizedBox(height: 12.0),
               ProjectButton(
@@ -137,13 +139,13 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
           uploadedUrl = result['url'];
         }
       }
-      _bloc.updateUser(
-        id: user.id,
-        phoneNumber: _phoneController.text,
+      // Prepare user data
+      _bloc.updateUser(user.id, user.copyWith(
         name: _nameController.text,
         address: _addressController.text,
-        photoUrl: uploadedUrl,
-      );
+        phone: _phoneController.text,
+        photoUrl: uploadedUrl ?? user.photoUrl, // Use existing photo if no new one
+      ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error updating user: $e')),

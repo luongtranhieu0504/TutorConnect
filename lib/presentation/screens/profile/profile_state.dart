@@ -1,6 +1,5 @@
 
-
-import '../../../domain/model/user.dart';
+import '../../../../domain/model/user.dart';
 
 abstract class ProfileState {}
 class ProfileInitial extends ProfileState {}

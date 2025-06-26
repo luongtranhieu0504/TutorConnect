@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:tutorconnect/common/utils/format_utils.dart';
 import 'package:tutorconnect/data/manager/account.dart';
 import 'package:tutorconnect/di/di.dart';
 import 'package:tutorconnect/presentation/animation/animated_divider.dart';
@@ -17,6 +13,7 @@ import 'package:tutorconnect/presentation/widgets/expandable_text.dart';
 import 'package:tutorconnect/theme/text_styles.dart';
 
 import '../../../domain/model/post.dart';
+import '../../../domain/model/user.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -27,16 +24,14 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen> {
   final _bloc = getIt<PostBloc>();
-  final bool _favorite = false;
-
+  late bool _favorite = false;
+  int likeCount = 0;
 
   @override
   void initState() {
     _bloc.getPosts();
     super.initState();
   }
-
-
 
   void _showPostSheet(BuildContext context) {
     showModalBottomSheet(
@@ -65,7 +60,6 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-
   Widget _buildContent(List<Post> posts) {
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +79,8 @@ class _PostScreenState extends State<PostScreen> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(Account.instance.user.photoUrl!),
+                    backgroundImage:
+                        NetworkImage(Account.instance.user.photoUrl!),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -172,13 +167,14 @@ class _PostScreenState extends State<PostScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(post.author!.typeRole!,
-                                    style:
-                                        AppTextStyles(context).bodyText1.copyWith(
-                                              fontSize: 12,
-                                            )),
+                                    style: AppTextStyles(context)
+                                        .bodyText1
+                                        .copyWith(
+                                          fontSize: 12,
+                                        )),
                               ),
                               SizedBox(width: 8),
-                              Text(post.createdAt.toString(),
+                              Text(FormatUtils.formatTimeAgo(post.createdAt),
                                   style: AppTextStyles(context)
                                       .bodyText2
                                       .copyWith(fontSize: 12)),
@@ -196,10 +192,15 @@ class _PostScreenState extends State<PostScreen> {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _favorite = !_favorite;
+                          _bloc.likePost(post.id, Account.instance.user.id);
+                        });
+                      },
                       icon: _favorite
-                          ? Icon(Icons.favorite_border)
-                          : Icon(Icons.favorite),
+                          ? Icon(Icons.favorite)
+                          : Icon(Icons.favorite_border),
                     ),
                     SizedBox(width: 4),
                     Text(post.likeCount.toString(),
@@ -226,5 +227,4 @@ class _PostScreenState extends State<PostScreen> {
       ],
     );
   }
-
 }

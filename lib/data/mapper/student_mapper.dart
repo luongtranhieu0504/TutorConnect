@@ -12,9 +12,8 @@ extension StudentDtoExtension on StudentDto {
   Student toModel() {
     return Student(
       id ?? 0,
-      uid,
       user!.toModel(),
-      favorites ?? [],
+      favorites?.map((favorite) => favorite['id'] as int).toList() ?? [],
       learningHistory?.map((e) => e.toModel()).toList() ?? [],
       reviews?.map((e) => e.toModel()).toList() ?? [],
       conversations?.map((e) => e.toModel()).toList() ?? [],

@@ -13,9 +13,8 @@ part 'student_dto.g.dart';
 class StudentDto with _$StudentDto {
   const factory StudentDto({
     @JsonKey(name: 'id') int? id,
-    @JsonKey(name: 'uid') String? uid,
     @JsonKey(name: 'user') UserDto? user,
-    @JsonKey(name: 'favorites') List<int  >? favorites,
+    @JsonKey(name: 'favorites') List<Map<String, dynamic>>? favorites,
     @JsonKey(name: 'learning_history') List<ScheduleDto>? learningHistory,
     @JsonKey(name: 'reviews') List<ReviewDto>? reviews,
     @JsonKey(name: 'conversations') List<ConversationDto>? conversations,

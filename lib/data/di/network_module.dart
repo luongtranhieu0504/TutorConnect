@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:tutorconnect/data/network/api/comment_api.dart';
 import 'package:tutorconnect/data/network/api/conversation_api.dart';
 import 'package:tutorconnect/data/network/api/message_api.dart';
 import 'package:tutorconnect/data/network/api/post_api.dart';
@@ -39,4 +40,7 @@ abstract class NetworkModule {
 
   @singleton
   PostApi providePostApi(Dio dio) => PostApi(dio);
+
+  @singleton
+  CommentApi provideCommentApi(Dio dio) => CommentApi(dio);
 }

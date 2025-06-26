@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:tutorconnect/domain/repository/auth_repository.dart';
 import 'package:tutorconnect/presentation/screens/profile/profile_state.dart';
-
-import '../../../common/async_state.dart';
-import '../../../common/stream_wrapper.dart';
+import '../../../../common/async_state.dart';
+import '../../../../common/stream_wrapper.dart';
 
 
 @injectable

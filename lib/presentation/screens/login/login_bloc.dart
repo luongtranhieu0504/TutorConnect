@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:injectable/injectable.dart';
 import '../../../common/async_state.dart';
 import '../../../common/stream_wrapper.dart';
+import '../../../domain/model/user.dart';
 import '../../../domain/repository/auth_repository.dart';
 
 @injectable
@@ -51,47 +52,15 @@ class LoginBloc {
     );
   }
 
-  void updateUser({
-    required int id,
-    String? photoUrl,
-    String? phoneNumber,
-    String? name,
-    String? school,
-    String? grade,
-    String? address,
-    String? state,
-    String? bio,
-  }) async {
+  void updateUser(int id, User user) async {
     updateBroadcast.add(const AsyncState.loading());
-    final result = await _authRepository.updateUser(
-      id,
-      photoUrl,
-      phoneNumber,
-      name,
-      school,
-      grade,
-      address,
-      state,
-      bio
-    );
+    final result = await _authRepository.updateUser(id, user);
     result.when(
       success: (_) => updateBroadcast.add(const AsyncState.success(true)),
       failure: (message) => updateBroadcast.add(AsyncState.failure(message)),
     );
   }
 
-  // void logout() async {
-  //   logoutBroadcast.add(const AsyncState.loading());
-  //   final result = await _loginRepository.logout();
-  //   result.when(
-  //       success: (user) {
-  //         logoutBroadcast.add(AsyncState.success(true));
-  //       },
-  //       failure: (message) {
-  //         logoutBroadcast.add(AsyncState.failure(message));
-  //       }
-  //   );
-  // }
 
   void dispose() {
     signInBroadcast.close();

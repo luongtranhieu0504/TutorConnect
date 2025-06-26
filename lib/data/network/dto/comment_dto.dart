@@ -13,7 +13,7 @@ class CommentDto with _$CommentDto {
     @JsonKey(name: 'imageUrls') List<String>? imageUrls,
     @JsonKey(name: 'author') UserDto? author,
     @JsonKey(name: 'post') PostDto? post,
-    @JsonKey(name: 'created_at') DateTime? createdAt,
+    @JsonKey(name: 'createdAt') DateTime? createdAt,
   }) = _CommentDto;
 
   factory CommentDto.fromJson(Map<String, dynamic> json) =>

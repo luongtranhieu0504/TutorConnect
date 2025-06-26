@@ -23,12 +23,8 @@ class AuthNetworkDataSource {
   Future<ResponseDto<LoginResDto>> register(RegisterReqDto registerReqDto) =>
       _authApi.register(registerReqDto);
 
-  Future<ResponseDto<UserDto>> updateUser(
-      int id,
-      UpdateUserReqDto updateUserReqDto,
-      ) =>
-      _authApi.updateUser(id, updateUserReqDto);
-
+  Future<ResponseDto<UserDto>> updateUser(int id, Map<String, dynamic> data) =>
+      _authApi.updateUser(id, data);
 
   Future<ResponseDto<UserDto>> updateUserStatus(int userId, Map<String, dynamic> data) =>
       _authApi.updateUserStatus(userId, data);

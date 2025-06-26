@@ -11,9 +11,9 @@ class Comment with _$Comment {
       int id,
       String? content,
       List<String>? imageUrls,
-      User author,
-      Post post,
-      DateTime createdAt,
+      User? author,
+      Post? post,
+      DateTime? createdAt,
       ) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) =>

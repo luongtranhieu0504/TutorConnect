@@ -8,17 +8,7 @@ abstract interface class AuthRepository {
   Future<TaskResult<bool>> signIn(String identifier, String password);
   Future<TaskResult<bool>> register(String username, String email, String password, int role);
   Future<TaskResult<bool>> logout();
-  Future<TaskResult<bool>> updateUser(
-      int id,
-      String? photoUrl,
-      String? phoneNumber,
-      String? name,
-      String? school,
-      String? grade,
-      String? address,
-      String? state,
-      String? bio,
-  );
+  Future<TaskResult<User>> updateUser(int id, User user);
 
   Future<TaskResult<void>> saveFcmToken(String? token);
 

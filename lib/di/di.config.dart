@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:tutorconnect/data/di/network_module.dart' as _i728;
 import 'package:tutorconnect/data/network/api/auth_api.dart' as _i958;
+import 'package:tutorconnect/data/network/api/comment_api.dart' as _i966;
 import 'package:tutorconnect/data/network/api/conversation_api.dart' as _i881;
 import 'package:tutorconnect/data/network/api/message_api.dart' as _i830;
 import 'package:tutorconnect/data/network/api/post_api.dart' as _i256;
@@ -27,6 +28,8 @@ import 'package:tutorconnect/data/network/interceptor/auth_interceptor.dart'
 import 'package:tutorconnect/data/network/socket/socket_service.dart' as _i79;
 import 'package:tutorconnect/data/repositories/auth_repository_impl.dart'
     as _i2;
+import 'package:tutorconnect/data/repositories/comment_repository_impl.dart'
+    as _i274;
 import 'package:tutorconnect/data/repositories/conversation_repository_impl.dart'
     as _i818;
 import 'package:tutorconnect/data/repositories/message_repository_impl.dart'
@@ -44,6 +47,8 @@ import 'package:tutorconnect/data/repositories/tutor_repository_impl.dart'
 import 'package:tutorconnect/data/source/auth_disk_data_source.dart' as _i481;
 import 'package:tutorconnect/data/source/auth_network_data_source.dart'
     as _i421;
+import 'package:tutorconnect/data/source/comment_network_data_source.dart'
+    as _i424;
 import 'package:tutorconnect/data/source/conversation_network_data_source.dart'
     as _i847;
 import 'package:tutorconnect/data/source/message_network_data_source.dart'
@@ -59,6 +64,8 @@ import 'package:tutorconnect/data/source/student_network_data_source.dart'
 import 'package:tutorconnect/data/source/tutor_network_data_source.dart'
     as _i315;
 import 'package:tutorconnect/domain/repository/auth_repository.dart' as _i11;
+import 'package:tutorconnect/domain/repository/comment_repository.dart'
+    as _i575;
 import 'package:tutorconnect/domain/repository/conversation_repository.dart'
     as _i669;
 import 'package:tutorconnect/domain/repository/message_repository.dart'
@@ -71,6 +78,8 @@ import 'package:tutorconnect/domain/repository/student_home_repository.dart'
     as _i1073;
 import 'package:tutorconnect/domain/repository/tutor_repository.dart' as _i437;
 import 'package:tutorconnect/presentation/screens/chat/chat_bloc.dart' as _i216;
+import 'package:tutorconnect/presentation/screens/comment/comment_bloc.dart'
+    as _i432;
 import 'package:tutorconnect/presentation/screens/login/login_bloc.dart'
     as _i667;
 import 'package:tutorconnect/presentation/screens/message/message_bloc.dart'
@@ -80,6 +89,8 @@ import 'package:tutorconnect/presentation/screens/profile/profile_bloc.dart'
     as _i971;
 import 'package:tutorconnect/presentation/screens/scheduall/schedule_bloc.dart'
     as _i194;
+import 'package:tutorconnect/presentation/screens/student/favorite/favorite_bloc.dart'
+    as _i714;
 import 'package:tutorconnect/presentation/screens/student/home/student_home_bloc.dart'
     as _i1059;
 import 'package:tutorconnect/presentation/screens/student/tutor_map/tutor_map_bloc.dart'
@@ -123,14 +134,22 @@ extension GetItInjectableX on _i174.GetIt {
         () => networkModule.provideScheduleApi(gh<_i361.Dio>()));
     gh.singleton<_i256.PostApi>(
         () => networkModule.providePostApi(gh<_i361.Dio>()));
+    gh.singleton<_i966.CommentApi>(
+        () => networkModule.provideCommentApi(gh<_i361.Dio>()));
+    gh.singleton<_i424.CommentNetworkDataSource>(
+        () => _i424.CommentNetworkDataSource(gh<_i966.CommentApi>()));
     gh.singleton<_i93.StudentNetworkDataSource>(
         () => _i93.StudentNetworkDataSource(gh<_i955.StudentApi>()));
     gh.singleton<_i992.ScheduleNetworkDataSource>(
         () => _i992.ScheduleNetworkDataSource(gh<_i554.ScheduleApi>()));
+    gh.singleton<_i575.CommentRepository>(() =>
+        _i274.CommentRepositoryImpl(gh<_i424.CommentNetworkDataSource>()));
     gh.singleton<_i1027.ScheduleRepository>(() =>
         _i1045.ScheduleRepositoryImpl(gh<_i992.ScheduleNetworkDataSource>()));
     gh.singleton<_i1073.StudentHomeRepository>(() =>
         _i918.StudentHomeRepositoryImpl(gh<_i93.StudentNetworkDataSource>()));
+    gh.factory<_i432.CommentBloc>(
+        () => _i432.CommentBloc(gh<_i575.CommentRepository>()));
     gh.singleton<_i570.MessageNetworkDataSource>(
         () => _i570.MessageNetworkDataSource(gh<_i830.MessageApi>()));
     gh.singleton<_i421.AuthNetworkDataSource>(
@@ -145,8 +164,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i867.PostNetworkDataSource(gh<_i256.PostApi>()));
     gh.singleton<_i901.ReviewRepository>(
         () => _i1060.ReviewRepositoryImpl(gh<_i940.ReviewNetworkDataSource>()));
-    gh.factory<_i1059.StudentHomeBloc>(
-        () => _i1059.StudentHomeBloc(gh<_i1073.StudentHomeRepository>()));
     gh.singleton<_i345.PostRepository>(
         () => _i361.PostRepositoryImpl(gh<_i867.PostNetworkDataSource>()));
     gh.singleton<_i596.MessageRepository>(() => _i53.MessageRepositoryImpl(
@@ -173,6 +190,12 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i669.ConversationRepository>(),
           gh<_i1073.StudentHomeRepository>(),
         ));
+    gh.factory<_i1059.StudentHomeBloc>(() => _i1059.StudentHomeBloc(
+          gh<_i1073.StudentHomeRepository>(),
+          gh<_i437.TutorRepository>(),
+        ));
+    gh.factory<_i714.FavoriteBloc>(
+        () => _i714.FavoriteBloc(gh<_i437.TutorRepository>()));
     gh.factory<_i106.TutorMapBloc>(
         () => _i106.TutorMapBloc(gh<_i437.TutorRepository>()));
     gh.factory<_i10.TutorHomeBloc>(

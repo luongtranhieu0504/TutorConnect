@@ -20,7 +20,6 @@ extension UserDtoExtension on UserDto {
       grade,
       phone,
       photoUrl,
-      bio,
       address,
       state,
       typeRole,

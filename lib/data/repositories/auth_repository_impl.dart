@@ -80,68 +80,37 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<TaskResult<bool>> updateUser(
-    int id,
-    String? photoUrl,
-    String? phoneNumber,
-    String? name,
-    String? school,
-    String? grade,
-    String? address,
-    String? state,
-    String? bio,
-  ) =>
-      callApi(() async {
-        final updateUserDto = UpdateUserReqDto(
-          phoneNumber: phoneNumber,
-          photoUrl: photoUrl,
-          name: name,
-          school: school,
-          grade: grade,
-          address: address,
-          state: state,
-          bio: bio,
-        );
-
-        final responseDto =
-            await _authNetworkDataSource.updateUser(id, updateUserDto);
-        final userDto = responseDto.data!;
-
-        final user = userDto.toModel();
-        Account.instance.saveUser(user);
-
-        return true;
-      });
+  Future<TaskResult<User>> updateUser(int id, User user) => callApi(() async {
+    final updateUser = {
+      'email': user.email,
+      'photoUrl': user.photoUrl,
+      'phone': user.phone,
+      'name': user.name,
+      'school': user.school,
+      'grade': user.grade,
+      'address': user.address,
+    };
+    final response = await _authNetworkDataSource.updateUser(id, updateUser);
+    final update = response.data!.toModel();
+    Account.instance.saveUser(update);
+    return update;
+  });
 
 
   @override
   Future<TaskResult<bool>> saveFcmToken(String? token) =>
       callApi(() async {
         final id = Account.instance.user.id;
-
         // Fetch current user data
-        final currentUserResponse = await _authNetworkDataSource.getUserById(id);
-        final currentUser = currentUserResponse.data;
-
-        // Merge current user data with new fcmToken
-        final updateUserDto = UpdateUserReqDto(
-          fcmToken: token,
-          photoUrl: currentUser?.photoUrl,
-          phoneNumber: currentUser?.phone,
-          name: currentUser?.name,
-          school: currentUser?.school,
-          grade: currentUser?.grade,
-          address: currentUser?.address,
-          state: currentUser?.state,
-          bio: currentUser?.bio,
-        );
-
+        final updateUser = {
+          'fcmToken': token,
+        };
         // Update user with merged data
         final responseDto =
-        await _authNetworkDataSource.updateUser(id, updateUserDto);
+        await _authNetworkDataSource.updateUser(id, updateUser);
         final userDto = responseDto.data!;
         final user = userDto.toModel();
-        Account.instance.saveUser(user);
+        Account.instance.saveUser(user.copyWith(fcmToken: token));
         return true;
       });
 

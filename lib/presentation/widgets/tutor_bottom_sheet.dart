@@ -43,7 +43,7 @@ class TutorBottomSheet extends StatelessWidget {
 
           // Môn dạy
           Text(
-            "📘 Môn: ${tutor.subjects.join(', ')}",
+            "📘 Môn: ${tutor.subjects?.join(', ')}",
             style: AppTextStyles(context).bodyText2,
           ),
 

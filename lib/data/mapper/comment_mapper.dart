@@ -8,9 +8,9 @@ extension CommentDtoExtension on CommentDto {
     return Comment(
       id ?? 0,
       content,
-      imageUrls,
+      imageUrls?.map((e) => e).toList() ?? [],
       author!.toModel(),
-      post!.toModel(),
+      null,
       createdAt ?? DateTime.now(),
     );
   }

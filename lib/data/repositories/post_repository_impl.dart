@@ -43,7 +43,7 @@ class PostRepositoryImpl implements PostRepository {
       'content': post.content,
       'image_urls': post.imageUrls,
       'author': post.author?.id,
-      'liked_by': post.likedBy?.map((user) => user.id).toList(),
+      'liked_by': post.likedBy?.map((id) => id).toList(),
       'like_count': post.likeCount,
       'comment_count': post.commentCount,
     };
@@ -62,6 +62,14 @@ class PostRepositoryImpl implements PostRepository {
   Future<TaskResult<Post>> getPostById(int postId) {
     return callApi(() async {
       final response = await _dataSource.getPostById(postId);
+      return response.data!.toModel();
+    });
+  }
+
+  @override
+  Future<TaskResult<Post>> likePost(int postId, int userId) {
+    return callApi(() async {
+      final response = await _dataSource.likePost(postId, userId);
       return response.data!.toModel();
     });
   }

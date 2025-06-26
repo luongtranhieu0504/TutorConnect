@@ -41,4 +41,12 @@ abstract class PostApi {
   Future<ResponseDto<void>> deletePost(
     @Path('id') int id,
   );
+
+  @PUT('/api/posts/{id}/like')
+  Future<ResponseDto<PostDto>> likePost(
+      @Path('id') int id,
+      @Body() Map<String, dynamic> data,
+      );
+
+
 }
