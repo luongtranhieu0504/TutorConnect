@@ -11,7 +11,7 @@ import '../network/api_call.dart';
 import '../network/dto/tutor_dto.dart';
 import '../source/tutor_network_data_source.dart';
 
-@Singleton(as: TutorRepository)
+@Singleton(as:  TutorRepository)
 class TutorRepositoryImpl implements TutorRepository {
   final TutorNetworkDataSource _dataSource;
 
@@ -54,12 +54,12 @@ class TutorRepositoryImpl implements TutorRepository {
   });
 
   @override
-  Future<TaskResult<List<Tutor>>> getTutorsList({
+  Future<TaskResult<List<Tutor>>> getTutors({
     String? subject,
     bool topRated = false,
   }) =>
       callApi(() async {
-        final response = await _dataSource.getTutorsList(subject: subject);
+        final response = await _dataSource.getTutorList(subject: subject);
 
         List<TutorDto> filteredTutors = response.data ?? [];
 
@@ -73,6 +73,8 @@ class TutorRepositoryImpl implements TutorRepository {
 
         return filteredTutors.map((dto) => dto.toModel()).toList();
       });
+
+
 
 
 }

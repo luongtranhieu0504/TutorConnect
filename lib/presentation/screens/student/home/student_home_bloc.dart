@@ -20,7 +20,7 @@ class StudentHomeBloc extends Cubit<StudentHomeState> {
   Future<void> loadInitialData() async {
     emit(Loading());
     final studentResult = await _studentHomeRepository.getCurrentStudent();
-    final tutorResult = await _tutorRepository.getTutorsList(topRated: true);
+    final tutorResult = await _tutorRepository.getTutors(topRated: true);
 
     studentResult.when(
       success: (student) {
@@ -56,7 +56,7 @@ class StudentHomeBloc extends Cubit<StudentHomeState> {
 
   Future<void> getTutorsBySubject(String subject) async {
     streamTutorsBySubject.add(AsyncState.loading());
-    final tutorResult = await _tutorRepository.getTutorsList(subject: subject);
+    final tutorResult = await _tutorRepository.getTutors(subject: subject);
 
     tutorResult.when(
       success: (tutors) {

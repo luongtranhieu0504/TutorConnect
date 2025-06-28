@@ -14,7 +14,7 @@ class TutorNetworkDataSource {
 
   Future<ResponseDto<TutorDto>> getCurrentTutor() => _tutorApi.getCurrentTutor();
 
-  Future<ResponseDto<List<TutorDto>>> getTutorsList({String? subject}) =>
+  Future<ResponseDto<List<TutorDto>>> getTutorList({String? subject}) =>
       _tutorApi.getTutors(subject: subject);
 
   Future<ResponseDto<TutorDto>> getTutorById(int id) => _tutorApi.getTutorById(id);

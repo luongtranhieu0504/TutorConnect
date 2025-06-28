@@ -15,7 +15,7 @@ class TutorMapBloc extends Cubit<TutorMapState> {
 
   void getTutors() async {
     emit(TutorMapLoading());
-    final result = await _tutorRepository.getTutorsList();
+    final result = await _tutorRepository.getTutors();
     result.when(
       success: (tutors) => emit(TutorMapSuccess(tutors)),
       failure: (message) => emit(TutorMapFailure(message)),

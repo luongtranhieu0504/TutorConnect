@@ -10,7 +10,6 @@ import '../../domain/model/review.dart';
 import '../../domain/model/tutor.dart';
 import '../network/dto/tutor_dto.dart';
 
-// Add this extension to your tutor_dto.dart file
 extension TutorDtoMapper on TutorDto {
   Tutor toModel() {
     return Tutor(

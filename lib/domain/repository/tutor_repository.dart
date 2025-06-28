@@ -5,8 +5,11 @@ abstract interface class TutorRepository {
   /// Get the current tutor.
   Future<TaskResult<Tutor?>> getCurrentTutor();
 
-  /// Get a list of tutors.
-  Future<TaskResult<List<Tutor>>> getTutorsList({
+
+
+
+
+  Future<TaskResult<List<Tutor>>> getTutors({
     String? subject,
     bool topRated = false,
   });
